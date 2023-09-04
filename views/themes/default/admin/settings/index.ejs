@@ -1,0 +1,141 @@
+<%
+let Theme_Have_Custom_settings = false;
+if (fs.existsSync(`views/themes/${settings.websiteTheme}/settings/index.ejs`)) {
+    Theme_Have_Custom_settings = true;
+}
+%>
+<%- include('../admin-header') -%>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation -->
+    <%- include('../admin-topNav') -%>
+    <div class="content-wrapper">
+        <%- include('../messages') -%>
+        <div class="row">
+                <div class="container light-style flex-grow-1 container-p-y">
+                    <h4 class="font-weight-bold py-3 mb-4">
+                        Blog settings
+                    </h4>
+                    <form action="/admin/settings/update" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="Theme_Have_Custom_settings" id="Theme_Have_Custom_settings" value="<%- Theme_Have_Custom_settings %>">
+                        <div class="card overflow-hidden">
+                            <div class="row no-gutters row-bordered row-border-light">
+                                <div class="col-md-3 pt-0">
+                                    <div class="list-group list-group-flush setting-settings-links">
+                                        <a class="list-group-item list-group-item-action active" data-toggle="list" href="#setting-general">General</a>
+                                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#setting-pagination">Pagination</a>
+                                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#setting-social-links">Social links</a>
+                                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#setting-template">Template</a>
+                                        <a class="list-group-item list-group-item-action custom-template-settings" data-toggle="list" href="#custom-setting">Custom Template Settings</a>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active show" id="setting-general">
+                                            <div class="card-body media align-items-center">
+                                                <img src="/images/favicon.ico" alt="" class="d-block ui-w-80 favicon-ui">
+                                                <div class="media-body ml-4">
+                                                    <label class="btn btn-outline-primary">
+                                                        Upload new favicon
+                                                        <input type="file" class="setting-settings-fileinput" name="uploadedFile" id="favicon_file" accept="image/*">
+                                                    </label>
+                                                    <div class="text-light small mt-1">Allowed Ico 32x32</div>
+                                                </div>
+                                            </div>
+                                            <hr class="border-light m-0">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="website_name" class="form-label text-dark">Website name</label>
+                                                    <input type="text" id="website_name" name="website_name" class="form-control mb-1" value="<%- settings.websiteName %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="copyright_text" class="form-label text-dark">Copyright footer text</label>
+
+                                                    <input type="text" id="copyright_text" name="copyright_text" class="form-control mb-1" value="<%- settings.websiteCopyright %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="website_language" class="form-label">Language</label>
+                                                    <select name="website_language" id="website_language" class="custom-select">
+                                                        <option lang="english" value="en" <% if(settings.websiteLanguage === "en") { %>selected <% } %>>English</option>
+                                                        <option lang="farsi" value="fa" <% if(settings.websiteLanguage === "fa") { %>selected <% } %>>فارسی</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="setting-pagination">
+                                            <div class="card-body pb-2">
+                                                <div class="form-group">
+                                                    <label for="pagination_limit" class="form-label text-dark">Pagination limit to</label>
+                                                    <input type="number" class="form-control" value="<%- settings.websitePaginationLimit %>" name="pagination_limit" id="pagination_limit">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="setting-social-links">
+                                            <div class="card-body pb-2">
+                                                <div class="form-group">
+                                                    <label for="instagram_url" class="form-label">Instagram</label>
+                                                    <input type="text" class="form-control" name="instagram_url" id="instagram_url" value="<%- settings.websiteInstagramURL %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="telegram_url" class="form-label">Telegram</label>
+                                                    <input type="text" class="form-control" name="telegram_url" id="telegram_url" value="<%- settings.websiteTelegramURL %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="twitter_url" class="form-label">Twitter</label>
+                                                    <input type="text" class="form-control" name="twitter_url" id="twitter_url" value="<%- settings.websiteTwitterURL %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="facebook_url" class="form-label">Facebook</label>
+                                                    <input type="text" class="form-control" name="facebook_url" id="facebook_url" value="<%- settings.websiteFacebookURL %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="googleplus_url" class="form-label">Google+</label>
+                                                    <input type="text" class="form-control" name="googleplus_url" id="googleplus_url" value="<%- settings.websiteGooglePlusURL %>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="linkedin_url" class="form-label">LinkedIn</label>
+                                                    <input type="text" class="form-control" name="linkedin_url" id="linkedin_url" value="<%- settings.websiteLinkedInURL %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="setting-template">
+                                            <div class="card-body">
+                                                <div class="gallery">
+                                                    <% themeData.forEach(function(theme) { %>
+                                                        <figure class="gallery__item gallery__item--<%- theme.id %>">
+                                                            <p class="text-dark text-center"><%- theme.name %></p>
+                                                            <img src="/images/templates/<%- theme.name %>/demo.jpg" id="templateTheme" data-path="<%- theme.name %>" class="gallery__img <% if(settings.websiteTheme === theme.name) { %>gallery__selected<% } %>" alt="<%- theme.name %>">
+                                                        </figure>
+                                                    <% }); %>
+                                                    <input type="hidden" id="website_theme" name="website_theme" class="form-control mb-1" value="<%- settings.websiteTheme %>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-setting">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <h3 class="text-dark">Custom Template Settings</h3>
+                                                        <% if (fs.existsSync(`views/themes/${settings.websiteTheme}/settings/index.ejs`)) { %>
+                                                            <%- include(`../../../${settings.websiteTheme}/settings/index`); %>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mt-3">
+                            <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+                        </div>
+                    </form>
+                </div>
+        </div>
+        <!-- /.container-fluid -->
+        <!-- /.content-wrapper-->
+        <%- include('../admin-footer') -%>
+    </div>
+</body>
+
+</html>

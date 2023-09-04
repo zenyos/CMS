@@ -1,0 +1,50 @@
+<header>
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo-container"><h1 class="logo"><%- CustomTemplateSettings.template_logo_name %></h1></div>
+            <div class="menu-container">
+                <ul class="menu-list">
+                    <li class="menu-list-item active-menu"><a class="top-nav-texts" href="/">Home</a></li>
+                    <li class="menu-list-item"><a class="top-nav-texts" href="/result/Movies">Movies</a></li>
+                    <li class="menu-list-item"><a class="top-nav-texts" href="/result/Series">Series</a></li>
+                    <li class="menu-list-item"><a class="top-nav-texts" href="/result/Anime">Anime</a></li>
+                    <li class="menu-list-item"><a class="top-nav-texts" href="/result/Popular">Popular</a></li>
+                    <li class="menu-list-item"><a class="top-nav-texts" href="/result/Trends">Trends</a></li>
+                </ul>
+            </div>
+
+            <div class="profile-container">
+                <% if(user) {%>
+                <img class="profile-picture" src="/uploads/avatars/<%- user.avatar %>" alt="">
+                <div class="profile-text-container dropdown">
+                    <span class="profile-text">Profile</span>
+                    <i class="fas fa-caret-down"></i>
+                    <div class="dropdown-content">
+                        <% if(user.level >= 1) {%>
+                            <a href="/admin">Dashboard</a>
+                        <% } %>
+                            <a href="/profile">Profile</a>
+                            <a href="/logout">Logout</a>
+                    </div>
+                </div>
+                <% } else { %>
+                        <ul class="menu-list">
+                            <li class="menu-list-item active-menu"><a class="top-nav-texts" href="/register">Register</a></li>
+                            <li class="menu-list-item active-menu"><a class="top-nav-texts" href="/login">Login</a></li>
+                        </ul>
+                    <% } %>
+                <div class="toggle">
+                    <i class="fas fa-moon toggle-icon"></i>
+                    <i class="fas fa-sun toggle-icon"></i>
+                    <div class="toggle-ball"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<aside>
+    <div class="sidebar">
+        <i class="left-menu-icon fas fa-search tooltip" onclick="openSearch()"><span class="tooltiptext">Search</span></i>
+        <a class="top-nav-texts" href="/"><i class="left-menu-icon fas fa-home tooltip"><span class="tooltiptext">Home</span></i></a>
+    </div>
+</aside>

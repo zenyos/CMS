@@ -1,0 +1,51 @@
+<%- include('../admin-header') -%>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation -->
+    <%- include('../admin-topNav') -%>
+    <div class="content-wrapper">
+        <%- include('../messages') -%>
+        <div class="row">
+            <div class="container">
+                <div class="col-md-10">
+                    <table class="table table-bordered text-center text-white">
+                        <thead class="bg-dark">
+                        <tr>
+                            <th>Publisher</th>
+                            <th>Approve Comments</th>
+                            <th>Date</th>
+                            <th>Comment Body</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-dark">
+                        <% comments.forEach(function(comment) { %>
+                            <tr>
+                                <td style="width: auto;"><%- comment.user.firstName%> <%- comment.user.lastName%></td>
+
+                                <td>
+                                    <label for="comment_id">
+                                        <input type="checkbox" class="form-check-input" id="commentIsApproved" name="commentIsApproved" data-path="<%- comment._id %>" <% if(comment.commentIsApproved) { %>value="false" checked<% } else { %>value="true"<% } %>>
+                                    </label>
+                                </td>
+
+                                <td><%- comment.date %></td>
+                                <td><%- comment.body %></td>
+                                <td>
+                                    <form action="/admin/comment/delete/<%- comment._id %>?newMethod=DELETE" method="post">
+                                        <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+        <!-- /.content-wrapper-->
+        <%- include('../admin-footer') -%>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+<%- include('Header') -%>
+<%- include('top-navigation') -%>
+<body>
+<div class="container">
+    <% if(locals.requiredUrl === '/' || locals.requiredUrl.indexOf('/page/') > -1 && posts.length > 0) { %>
+            <%- include('Main'); %>
+        <% } else if(locals.requiredUrl.indexOf('/login') > -1) { %>
+            <%- include('login'); %>
+        <% } else if(locals.requiredUrl.indexOf('/register') > -1) { %>
+            <%- include('register'); %>
+        <% } else if(locals.requiredUrl.indexOf('/result') > -1) { %>
+            <%- include('result'); %>
+        <% } else if(locals.requiredUrl.indexOf('/post/') > -1) { %>
+            <%- include('singlePost'); %>
+        <% } else { %>
+            <%- include('404'); %>
+        <% } %>
+</div>
+<!-- /.container -->
+
+<%- include('Footer') -%>

@@ -1,0 +1,198 @@
+<div class="content-wrapper">
+    <%- include('messages') -%>
+</div>
+
+<div class="row">
+    <div class="container-section">
+        <section class="single-section">
+            <article class="single-post-article">
+                <div class="row">
+                    <div class="card">
+                        <div class="single-post">
+                            <div class="single-content-section">
+                                <a href="/post/<%= post._id%>"><h3 class="card-title"><%= post.title %></h3></a>
+                                <% if(post.user) { %>
+                                    <h5>Posted on <%- post.creationDate %> by <a href="#"><%- post.user.firstName %> <%- post.user.lastName %></a></h5>
+                                <% } %>
+                                <img class="single-post-image" src="<%- post.file %>" alt="">
+                                <div class="single_post_description">
+                                    <p><%- post.description %>...</p>
+                                </div>
+                                <br/>
+                                <div class="single_post_description_more">
+                                    <p><%- post.description_more %></p>
+                                </div>
+                            </div>
+                            <% if(post.useInfoBox) { %>
+                                <div class="single-info-section">
+                                    <div class="card box-single-info">
+                                        <%
+                                            let InfoElementsData = "";
+                                            if(post.InfoBoxContent.length)
+                                                InfoElementsData = JSON.parse(post.InfoBoxContent);
+                                        if(InfoElementsData !== undefined || InfoElementsData !== "") { %>
+                                            <ul class="flex-single-info">
+                                                <% InfoElementsData.forEach(function (infoData, infoIndex) { %>
+                                                    <li class="fm-infos">
+                                                        <strong><%- infoData.icon %><%- infoData.property %> </strong><%- infoData.value %>
+                                                    </li>
+                                                <% }); %>
+                                            </ul>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                        <% if(post.useGalleryBox) { %>
+                            <%
+                                let GalleryElementsData = "";
+                                if(post.GalleryBoxContent.length)
+                                    GalleryElementsData = JSON.parse(post.GalleryBoxContent);
+                            if(GalleryElementsData !== undefined || GalleryElementsData !== "") { %>
+                                <div class="row-gallery">
+                                    <% GalleryElementsData.forEach(function (galleryData, galleryIndex) { %>
+                                    <div class="column-gallery">
+                                        <img src='/uploads/gallery/<%- post._id.toString() %>/<%- galleryData.image %>' alt="<%- galleryData.image.split('.').slice(0, -1).join('.') %>" style="width:100%" onclick="myFunction(this);">
+                                    </div>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                            <div class="container-gallery">
+                                <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+                                <img id="expandedImg" style="width:100%" alt="" src="">
+                                <div id="imgtext"></div>
+                            </div>
+                        <% } %>
+                        <% if(post.useLinkBox) { %>
+                        <%
+                            let LinkElementsData = "";
+                            if(post.LinkBoxContent.length)
+                                LinkElementsData = JSON.parse(post.LinkBoxContent);
+                            if(LinkElementsData !== undefined || LinkElementsData !== "") { %>
+                                <div class="link-box">
+                                    <div class="holder-custom-ads"></div>
+                                    <div class="right-link-box">
+                                        <div class="link-box-title">
+                                            <div>
+                                                <span style="">password : <%- LinkElementsData.password %></span>
+                                                <br>
+                                                <span style="color: #7cb342;">( Tip: Type password )</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="link-items-body link-box-content">
+                                        <div class="link-items link-items-software">
+                                            <span class="link-items-software-title"><i class="fas fa-cloud-download-alt"></i><%- LinkElementsData.name %></span>
+                                            <% LinkElementsData.links.forEach(function (linkData, linkIndex) { %>
+                                                <p class="link-items-software-links">
+                                                    <i class="fas fa-chevron-left"></i>
+                                                    <a href="<%- linkData.address %>" data-wpel-link="external" rel="external noopener noreferrer" download=""><%- linkData.title %></a>
+                                                </p>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } %>
+                        <% if(post.useDownloadBox) { %>
+                            <%
+                                let DownloadElementsData = "";
+                                if(post.DownloadBoxContent.length)
+                                    DownloadElementsData = JSON.parse(post.DownloadBoxContent);
+                            %>
+                            <div class="download-box">
+                                <% if(DownloadElementsData.length > 0) { %>
+                                    <% DownloadElementsData.forEach(function(downloadBoxParent, indexParent) { %>
+                                        <div class="collapsible">
+                                            <ul>
+                                                <li><span><i class="fas fa-cloud-download-alt"></i></span></li>
+                                                <li><%- downloadBoxParent.title %></li>
+                                            </ul>
+                                        </div>
+                                        <% downloadBoxParent.childs.forEach(function(downloadBoxChild, indexChild) { %>
+                                            <div class="dl-links">
+                                                <div class="collapsible-child">
+                                                    <ul>
+                                                        <li><span><i class="fa-sharp fa-solid fa-tv"></i></span></li>
+                                                        <li><%- downloadBoxChild.title %></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="<%- downloadBoxChild.title.replace(/\s+/g, '') %> child-coll-items">
+                                                    <% downloadBoxChild.items.forEach(function(downloadBoxItem, indexItem) { %>
+                                                        <div class="dl-links-child">
+                                                            <ul>
+                                                                <li><span><i class="fa-solid fa-file-arrow-down"></i></span></li>
+                                                                <li><%- downloadBoxItem.title %></li>
+                                                            </ul>
+                                                            <div class="episode-dl-links">
+                                                                <a class="episode-dl-item subtitle-dl-btn" href="<%- downloadBoxItem.subtitle %>" rel="nofollow noopener">Subtitle</a>
+                                                                <a class="episode-dl-item episode-dl-btn" href="<%- downloadBoxItem.episode %>" rel="nofollow noopener" title="Download Link">Download</a>
+                                                            </div>
+                                                        </div>
+                                                    <% }); %>
+                                                </div>
+                                            </div>
+                                        <% }); %>
+                                    <% }); %>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="card">
+                        <div class="comments">
+                            <h3 id="reply-title" class="comment-title-reply">
+                                Comments
+                            </h3>
+                            <% if(post.allowComments) { %>
+                                <form action="/post/<%- post._id %>" method="post">
+                                    <div class="comment-form-content">
+                                        <div class="comment-form-textarea">
+                                            <label for="comment_body"><textarea name="comment_body" id="comment_body" rows="7" placeholder="Your review..."></textarea></label>
+                                            <input type="hidden" name="id" value="<%- post._id %>">
+                                            <button name="submit" type="submit" id="submit" title="Send Comment">Send Review</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            <div class="comment-break-line"></div>
+                            <% } else { %>
+                                <h4 style="color: red;">You are not able to send comment in this post!</h4>
+                              <% } %>
+                            <ul class="comment_list">
+                                <% post.comments.forEach(function(comment) { %>
+                                    <% if(comment.commentIsApproved) { %>
+                                        <li>
+                                            <div class="comment_box">
+                                                <div class="header">
+                                                    <img class="rounded-circle" width="38" height="38" src="/uploads/avatars/<%- comment.user.avatar %>" alt="avatar Diariesvexar">
+                                                    <div class="author-box">
+                                                        <div class="author-name"><%- comment.user.firstName %> <%- comment.user.lastName %><span class="author-role"><% if(comment.user.level === 0) {%>user<% } %><% if(comment.user.level === 1) {%>admin<% } %><% if(comment.user.level === 2) {%>moderator<% } %><% if(comment.user.level === 3) {%>owner<% } %></span></div>
+                                                        <div class="comment-date">1/27/2023</div>
+                                                    </div>
+                                                </div>
+                                                <div class="content">
+                                                    <p><%- comment.body %></p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <% } %>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <%- include('sidepreview') -%>
+    </div>
+</div>
+
+<script>
+    function myFunction(imgs) {
+        var expandImg = document.getElementById("expandedImg");
+        var imgText = document.getElementById("imgtext");
+        expandImg.src = imgs.src;
+        imgText.innerHTML = imgs.alt;
+        expandImg.parentElement.style.display = "block";
+        expandImg.parentElement.style.transition = "all 1s ease-in-out";
+    }
+</script>

@@ -1,0 +1,120 @@
+<%- include('../admin-header') -%>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation -->
+    <%- include('../admin-topNav') -%>
+    <div class="content-wrapper">
+        <%- include('../messages') -%>
+        <div class="container">
+            <h1>Create New Post</h1>
+
+            <div class="row p-4">
+                <div class="col-md-10">
+                    <form action="/admin/posts/create" method="post" enctype="multipart/form-data" name="create-post">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Enter The Title" id="title" required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="file">File Upload</label>
+                            <input type="file" class="form-control" name="uploadedFile" id="file">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <div class="category-list">
+                                <ul>
+                                    <% categories.forEach(function(category) { %>
+                                    <li>
+                                        <span><%- category.title %></span>
+                                        <input type="checkbox" name="category" id="category" <% if(category.title === 'Uncategorized') { %>checked<% } %> value="<%- category.title %>"/>
+                                    </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-check ml-3">
+                            <label for="allowComments">
+                                <input type="checkbox" class="form-check-input" id="allowCommnets" name="allowComments">
+                                Allow Comments
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Content</label>
+                            <textarea name="description" id="description" class="form-control" placeholder="Enter your content here" rows="15" required></textarea>
+                        </div>
+                        <a href="#description_more" id="more-content" class="btn btn-default readMore-text">Toggle More</a>
+                        <div class="form-group">
+                            <label for="description_more"></label>
+                            <textarea name="description_more" id="description_more" class="form-control invisible display-none" placeholder="Enter your more content here" rows="15"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="postType">
+                                <select id="post-type">
+                                    <option value="no media">--Select post type--</option>
+                                    <option value="galleryBox">Gallery</option>
+                                    <option value="downloadBox">Collapsible</option>
+                                    <option value="linkBox">Link</option>
+                                    <option value="infoBox">Info</option>
+                                </select>
+                                <button class="btn btn-outline-success btn-lg" name='add-box-btn' id='add-box-btn' type="button">Add</button>
+                                <button class="btn btn-outline-danger btn-lg" name='remove-box-btn' id='remove-box-btn' type="button">Remove</button>
+                            </label>
+                            <div class="box-setup">
+                                <input type="hidden" id="useDownloadBox" name="useDownloadBox" value="false">
+                                <input type="hidden" id="useGalleryBox" name="useGalleryBox" value="false">
+                                <input type="hidden" id="useLinkBox" name="useLinkBox" value="false">
+                                <input type="hidden" id="useInfoBox" name="useInfoBox" value="false">
+                                <div class="info-section">
+                                    <h3 class="text-center">Info Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="info_box_description" name="info_box_description" value="">
+                                    <input type="hidden" id="info_elements_data" name="info_elements_data" value="">
+                                </div>
+                                <div class="gallery-section">
+                                    <h3 class="text-center">Gallery Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="gallery_box_description" name="gallery_box_description" value="">
+                                    <input type="hidden" id="gallery_elements_data" name="gallery_elements_data" value="">
+                                </div>
+                                <div class="link-section">
+                                    <h3 class="text-center">Link Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="link_box_description" name="link_box_description" value="">
+                                    <input type="hidden" id="link_elements_data" name="link_elements_data" value="">
+                                </div>
+                                <div class="download-section">
+                                    <h3 class="text-center">Collapsible Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="download_box_description" name="download_box_description" value="">
+                                    <input type="hidden" id="download_elements_data" name="download_elements_data" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-success btn-lg" type="submit">Create Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+        <!-- /.content-wrapper-->
+        <%- include('../admin-footer') -%>
+    </div>
+</body>
+
+</html>

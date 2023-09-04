@@ -1,0 +1,565 @@
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none !important;
+}
+
+.navbar {
+  width: 100%;
+  height: 50px;
+  background-color: #10121d;
+  position: sticky;
+  top: 0;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 100% !important;
+  }
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  padding: 0 50px;
+  height: 100%;
+  color: white;
+  font-family: "Sen", sans-serif;
+}
+
+.logo-container {
+  flex: 1;
+}
+
+.logo-container:hover {
+  cursor: default;
+}
+
+.logo {
+  font-size: 30px;
+  color: #4dbf00;
+}
+
+.menu-container {
+  flex: 6;
+}
+
+.menu-list {
+  display: flex;
+  list-style: none;
+}
+
+.menu-list-item {
+  margin-right: 30px;
+}
+
+.menu-list-item:hover {
+  color: #4dbf00;
+  cursor: pointer;
+}
+
+.menu-list-item.active-menu {
+  font-weight: bold;
+}
+.profile-container {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.profile-text-container {
+  margin: 0 20px;
+}
+
+.profile-picture {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.toggle {
+  width: 40px;
+  height: 21px;
+  background-color: white;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  color: goldenrod;
+}
+
+.toggle-ball {
+  width: 18px;
+  height: 18px;
+  background-color: black;
+  position: absolute;
+  right: 1px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 1s ease all;
+  transform: translateX(0px);
+}
+
+.dark-mode-ball {
+  transform: translateX(0px);
+}
+
+.sidebar {
+  width: 50px;
+  height: 100%;
+  background-color: #10121d;
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.left-menu-icon {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.left-menu-icon:hover {
+  cursor: pointer;
+  color: #4dbf00;
+}
+
+body {
+  background-color: #151515;
+  min-height: calc(100vh - 50px);
+  color: white;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)),
+  url("../img/anime/itachi.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.content-container {
+  padding-top: 20px;
+  margin: 0 50px;
+  background-color: #00000040;
+}
+
+.suggestion-movies {
+  display: flex;
+}
+.suggestion-movies ul {
+  list-style: none;
+  padding-top: 10px;
+  margin: 0 80px;
+}
+
+.suggestion-movies li {
+  height: 250px;
+  width: 490px;
+  margin: 0 auto;
+  display: inline-block;
+}
+
+.featured-content:hover .featured-title {
+  transform: scale(1.1);
+  transition: all 0.5s ease-in-out;
+  opacity: 0.5;
+}
+
+.featured-content {
+  height: 40vh;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0), #151515), url('../img/f-1.jpg') !important;
+}
+
+.featured-title {
+  width: 465px;
+  height: 330px;
+  transition: all 0.5s ease-in-out;
+  padding: 40px 20px;
+  margin: 0 auto;
+}
+
+.featured-content:hover .featured-desc {
+  width: 470px;
+  height: 140px;
+  max-height: 140px !important;
+  top: 260px;
+  transform: translateY(0);
+  transition: width 0.3s, height 0.3s, background-color 0.3s, visibility 1s, transform 0.3s;
+  opacity: 1;
+  visibility: visible;
+}
+
+.featured-desc {
+  width: 0;
+  top: 500px;
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  transition: all 0.0s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  transform: translateY(100px);
+  padding: 30px;
+}
+
+.featured-button {
+  background-color: #a03ca7;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  position: absolute;
+  bottom: 0;
+  cursor: pointer;
+  transition: all 0.6s ease-in-out;
+  margin: 125px;
+  opacity: 0;
+}
+
+.featured-button {
+  color: white;
+}
+
+.featured-content:hover .featured-button {
+  transition: all 0.4s ease-in-out;
+  opacity: 1;
+}
+
+.movie-list-container {
+  padding: 20px;
+}
+
+.movie-list-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-list {
+  display: flex;
+  align-items: center;
+  height: 300px;
+  transform: translateX(0);
+  transition: all 1s ease-in-out;
+}
+
+.movie-list-item {
+  margin-right: 30px;
+  position: relative;
+}
+
+.movie-list-item:hover .movie-list-item-img {
+  transform: scale(1.2);
+  margin: 0 30px;
+  opacity: 0.5;
+}
+
+.movie-list-item:hover .movie-list-item-title,
+.movie-list-item:hover .movie-list-item-desc,
+.movie-list-item:hover .movie-list-item-button {
+  opacity: 1;
+}
+.movie-list-item:hover .movie-list-item-info-box {
+  opacity: 0.5;
+  transition: all 1.2s ease-in-out;
+  margin: 0 30px;
+  transform: scale(1.1);
+}
+
+.movie-list-item-img {
+  transition: all 1s ease-in-out;
+  width: 270px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.movie-list-item-info-box {
+  width: 270px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 20px;
+  background-color: #000;
+  position: absolute;
+  transition: all 1.2s ease-in-out;
+  top: 0;
+  opacity: 0;
+}
+
+.movie-list-item-title {
+  padding: 0 10px;
+  font-size: 32px;
+  font-weight: bold;
+  position: absolute;
+  top: 10%;
+  left: 50px;
+  opacity: 0;
+  transition: 1s all ease-in-out;
+  line-height: 20px;
+  color: #fff;
+  text-align: left;
+  direction: ltr;
+}
+
+.movie-list-item-desc {
+  padding: 10px;
+  font-size: 14px;
+  position: absolute;
+  top: 30%;
+  left: 50px;
+  width: 230px;
+  opacity: 0;
+  transition: 1s all ease-in-out;
+  color: white;
+}
+
+.movie-list-item-button {
+  padding: 10px 20px;
+  background-color: #4dbf00;
+  color: white;
+  border-radius: 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  left: 40%;
+  opacity: 0;
+  transition: 1s all ease-in-out;
+}
+
+.arrow {
+  font-size: 45px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: lightgray;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+h1.movie-list-title {
+  color: white;
+  width: 700px;
+}
+
+.movie-list-title-more {
+  font-size: 15px;
+  bottom: 420px;
+  color: gray;
+  opacity: 0.7;
+  cursor: pointer;
+  margin: 0 40px;
+}
+
+.movie-list-title-more:hover {
+  color: #428bca !important;
+}
+
+/* Color Toggle Settings */
+.container.light-mode {
+  background: white url("../img/anime/sasuke.jpg") no-repeat fixed center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.movie-list-title.light-mode {
+  color: black;
+  background-color: #ffffff59;
+  width: 700px;
+  padding: 10px;
+}
+.movie-list-title-more.light-mode {
+  color: black;
+  float: right;
+  padding: 10px;
+}
+.navbar-container.light-mode {
+  background-color: white;
+  color: black;
+}
+.fm-infos.light-mode {
+  background-color: white !important;
+  color: black !important;
+}
+.comment-form-textarea textarea.light-mode {
+  background: transparent;
+  border: 2px solid #9b9b9b;
+  transition: all 0.2s ease;
+}
+ul.comment_list li.light-mode {
+  background: transparent;
+  border: 2px solid #9b9b9b;
+  transition: all 0.2s ease;
+}
+.author-box .author-role.light-mode {
+  color: white;
+}
+.content-container.light-mode {
+  background-color: #ffffff59;
+}
+.sidebar.light-mode {
+  background-color: white;
+}
+.left-menu-icon.light-mode {
+  color: black;
+}
+.left-menu-icon:hover.light-mode {
+  color: #4dbf00;
+}
+.toggle.light-mode {
+  background-color: black;
+}
+.toggle-ball.light-mode {
+  background-color: black;
+  transform: translateX(-20px);
+}
+.card.light-mode {
+  background-color: white;
+  color: black;
+}
+.sideTitle.light-mode {
+  background-color: #a2a2a2;
+  color: black;
+}
+.items.light-mode {
+  background-color: #a2a2a2;
+  color: black;
+}
+.footContent.light-mode {
+  background-color: white !important;
+  color: black;
+}
+#scrollTop.light-mode {
+  background-color: black;
+  color: white;
+}
+.footer-copyright.light-mode {
+  color: #428bca;
+}
+.top-nav-texts.light-mode {
+  color: #000;
+}
+.card-title.light-mode {
+  background-color: #d5d5d5;
+}
+.single-content-section h5.light-mode, .card h5.light-mode {
+  background-color: #d5d5d5;
+}
+/* Color Toggle Settings */
+
+.fix-clear {
+  clear: both;
+}
+
+@media only screen and (max-width: 940px){
+  .menu-container{
+    display: none;
+  }
+}
+
+:root {
+  color-scheme: light dark; /* both supported */
+}
+
+#scrollTop {
+  bottom: 15px;
+  right: -45px;
+  width: 35px;
+  height: 35px;
+  line-height: 39px;
+  font-size: 14px;
+  text-align: center;
+  border: 0;
+  opacity: 0;
+  transition: all 0.25s ease-in-out;
+  overflow: hidden;
+  box-shadow: 0 2px 0 rgb(17 17 17);
+  z-index: 999;
+  cursor: pointer;
+  background: #fff;
+  color: #464646;
+  border-radius: 6px;
+  position: fixed!important;
+}
+
+#scrollTop:hover {
+  opacity: 1 !important;
+}
+.top {
+  transition: all 0.5s ease 0s;
+  -moz-transition: all 0.5s ease 0s;
+  -webkit-transition: all 0.5s ease 0s;
+  -o-transition: all 0.5s ease 0s;
+}
+
+.scrollTop.isActive {
+  right: 15px !important;
+  opacity: 0.5 !important;
+  visibility: visible;
+  pointer-events: all;
+  transition: all 0.5s ease 0s;
+  -moz-transition: all 0.5s ease 0s;
+  -webkit-transition: all 0.5s ease 0s;
+  -o-transition: all 0.5s ease 0s;
+}
+
+.rightcolumn {
+  padding-bottom: 40px;
+}
+
+.top-nav-texts {
+  color: #fff;
+}
+.top-nav-texts:hover {
+  color: #4dbf00;
+}
+.profile-text-container:hover {
+  cursor: pointer;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #151515;
+  color: #fff;
+  min-width: 120px;
+  box-shadow: 0 8px 16px 0 rgb(0 0 0);
+  padding: 15px;
+  z-index: 1;
+  left: -20px;
+}
+.dropdown-content a {
+  color: #fff;
+}
+.dropdown-content a:hover {
+  color: #4dbf00;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}

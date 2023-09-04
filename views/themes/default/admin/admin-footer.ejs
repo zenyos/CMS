@@ -1,0 +1,882 @@
+<footer class="sticky-footer">
+    <div class="container">
+        <div class="text-center">
+            <small>Copyright © Your Website 2023</small>
+        </div>
+    </div>
+</footer>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fa fa-angle-up"></i>
+</a>
+<!-- Logout Modal-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin.min.js"></script>
+
+<script>
+    let _DOWNLOAD_BOX_ADDED = false;
+    let _GALLERY_BOX_ADDED = false;
+    let _LINK_BOX_ADDED = false;
+    let _INFO_BOX_ADDED = false;
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.auto-hide').slideUp(300);
+        }, 2000);
+
+
+        $("#create-category-button").on('click', function (e) {
+            e.preventDefault();
+
+            let data = $("#category-title").val();
+
+            $.ajax({
+                url: '/admin/category/create',
+                type: 'POST',
+                data: {name: data},
+                success: function (response) {
+
+                    var html = `<tr>
+                        <td>${response.title}</td>
+                        <td class="d-flex justify-content-center">
+                            <a href="/admin/category/edit/${response._id}" class="btn btn-sm btn-warning mr-2">Edit</a>
+                            <form action="/admin/category/${response._id}?newMethod=DELETE" method="post">
+                                <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>`;
+
+                    $(".category-list").append(html);
+
+                }
+            });
+
+            $("#category-title").val('');
+        });
+
+
+        $("#update-category-button").on('click', function (e) {
+            e.preventDefault();
+
+            var data = $("#category-title").val();
+            var id = $("#category-id").val();
+
+            $.ajax({
+                url: `/admin/category/edit/${id}`,
+                type: 'POST',
+                data: {name: data},
+                success: function (response) {
+                    window.location.href = response.url;
+                }
+            });
+        });
+
+        $("#delete-category-button").on('click', function (e) {
+            e.preventDefault();
+
+            var id = $("#category-id").val();
+            $.ajax({
+                url: `/admin/category/delete/${id}`,
+                type: 'POST',
+                data: {_id: id},
+                success: function (response) {
+                    window.location.href = response.url;
+                }
+            });
+        });
+        $("#delete-comment-button").on('click', function (e) {
+            e.preventDefault();
+
+            var id = $("#comment-id").val();
+            $.ajax({
+                url: `/admin/category/delete/${id}`,
+                type: 'POST',
+                data: {_id: id},
+                success: function (response) {
+                    window.location.href = response.url;
+                }
+            });
+        });
+
+        $("input[name='commentIsApproved']").click(function(e) {
+            e.preventDefault();
+            var id = $(this).data('path');
+            var value = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: `/admin/comment/switch/${id}`,
+                async: true,
+                data: {
+                    id: id,
+                    status: value
+                },
+                success: function (response) {
+                    window.location.href = response.url;
+                }
+            });
+        });
+
+        $("img[id='templateTheme']").on('click', function(e){
+            e.preventDefault();
+            let name = $(this).data('path');
+            $("img[id='templateTheme']").removeClass("gallery__selected");
+            $(this).addClass('gallery__selected');
+            $("#website_theme").val(name);
+        });
+
+        $("#more-content").on('click', function (e) {
+            e.preventDefault();
+            let desc_more = $("#description_more");
+            desc_more.toggleClass('visible display-block');
+            desc_more.toggleClass('invisible display-none');
+        });
+
+        $(document).ready(function () {
+            $('#description').keyup(function () {
+                $('#outputView').html($(this).val());
+            });
+            $('#description_more').keyup(function () {
+                $('#outputViewMore').html($(this).val());
+            });
+        });
+
+        let downloadSection = $(".download-section");
+        let gallerySection = $(".gallery-section");
+        let linkSection = $(".link-section");
+        let infoSection = $(".info-section");
+        let boxSetup = $(".box-setup");
+        let useDownloadBox = $("#useDownloadBox");
+        let useGalleryBox = $("#useGalleryBox");
+        let useLinkBox = $("#useLinkBox");
+        let useInfoBox = $("#useInfoBox");
+        let form_group = $(".form-group");
+
+        let downloadBoxElements = $(".download-box-elements");
+        let downloadElementsData = $("#download_box_description").val();
+        let linkBoxElements = $(".link-box-elements");
+        let linkElementsData = $("#link_box_description").val();
+        let galleryBoxElements = $(".gallery-box-elements");
+        let galleryElementsData = $("#gallery_box_description").val();
+        let infoBoxElements = $(".info-box-elements");
+        let infoElementsData = $("#info_box_description").val();
+
+        let element_parent_id = 0;
+        let element_child_id = 0;
+        let element_item_id = 0;
+        let element_data = {};
+
+        let element_link_id = 0;
+        let link_element_data = {};
+
+        let element_gallery_id = 0;
+        let gallery_element_data = {};
+
+        let element_info_id = 0;
+        let info_element_data = [];
+
+        if(downloadElementsData !== undefined) {
+            if (downloadElementsData.length > 0)
+                downloadElementsData = JSON.parse(downloadElementsData);
+            if (downloadElementsData.length) {
+                if (downloadElementsData.length > 0) {
+                    element_parent_id = downloadElementsData.length;
+                }
+                if (downloadElementsData[0].childs.length > 0)
+                    element_child_id = downloadElementsData[0].childs.length;
+                if (downloadElementsData[0].childs[0].items.length > 0)
+                    element_item_id = downloadElementsData[0].childs[0].items.length;
+            }
+            element_data = JSON.stringify(downloadElementsData);
+        }
+        if(linkElementsData !== undefined) {
+            if (linkElementsData.length > 0)
+                linkElementsData = JSON.parse(linkElementsData);
+
+            if (linkElementsData) {
+                if (linkElementsData.links.length > 0)
+                    element_link_id = linkElementsData.links.length;
+            }
+            link_element_data = JSON.stringify(linkElementsData);
+        }
+        if(galleryElementsData !== undefined) {
+            if (galleryElementsData.length > 0)
+                galleryElementsData = JSON.parse(galleryElementsData);
+
+            if (galleryElementsData.length) {
+                if (galleryElementsData.length > 0)
+                    element_gallery_id = galleryElementsData.length;
+            }
+            gallery_element_data = JSON.stringify(galleryElementsData);
+        }
+
+        if(infoElementsData !== undefined) {
+            if (infoElementsData.length > 0)
+                infoElementsData = JSON.parse(infoElementsData);
+
+            if (infoElementsData.length) {
+                if (infoElementsData.length > 0)
+                    element_info_id = infoElementsData.length;
+            }
+            if(infoElementsData.length > 0)
+                info_element_data = JSON.stringify(infoElementsData);
+            else
+                info_element_data = [];
+        }
+        if(info_element_data) {
+            if(info_element_data.length > 0) {
+                let info_icon = JSON.parse(info_element_data);
+                const infoIcon_Select_Options = document.querySelectorAll('.info_icon option');
+                infoIcon_Select_Options.forEach((Select, i) => {
+                    let $SELECT = $(Select);
+                    let Info_Id = $SELECT.data('info');
+                    if(Info_Id !== undefined) {
+                        if ($SELECT.val().length > 0) {
+                            if ($SELECT.val() === info_icon[Info_Id].icon)
+                                $SELECT.attr('selected', 'selected');
+                        }
+                    }
+                });
+            }
+        }
+        if(useGalleryBox.val() === 'false' || useGalleryBox.val() <= 0) {
+            useGalleryBox.val("false");
+        }
+        if(useDownloadBox.val() === 'false' || useDownloadBox.val() <= 0) {
+            useDownloadBox.val("false");
+        }
+        if(useLinkBox.val() === 'false' || useLinkBox.val() <= 0) {
+            useLinkBox.val("false");
+        }
+
+        if(useInfoBox.val() === 'false' || useInfoBox.val() <= 0) {
+            useInfoBox.val("false");
+        }
+
+        if(useGalleryBox.val() === "true")
+        {
+            boxSetup.show();
+            gallerySection.show();
+            _GALLERY_BOX_ADDED = true;
+        }
+        if(useDownloadBox.val() === "true")
+        {
+            boxSetup.show();
+            downloadSection.show();
+            _DOWNLOAD_BOX_ADDED = true;
+        }
+        if(useLinkBox.val() === "true")
+        {
+            boxSetup.show();
+            linkSection.show();
+            _LINK_BOX_ADDED = true;
+        }
+
+        if(useInfoBox.val() === "true")
+        {
+            boxSetup.show();
+            infoSection.show();
+            _INFO_BOX_ADDED = true;
+        }
+
+        form_group.on('click', "#add-box-btn, #remove-box-btn", function () {
+            let clickedButton = $(this).attr('id');
+
+            if(_GALLERY_BOX_ADDED || _DOWNLOAD_BOX_ADDED || _LINK_BOX_ADDED || _INFO_BOX_ADDED)
+                boxSetup.show();
+            if(!_GALLERY_BOX_ADDED && !_DOWNLOAD_BOX_ADDED && !_LINK_BOX_ADDED && !_INFO_BOX_ADDED)
+                boxSetup.hide();
+
+            //Download Box
+            let add_parent_button = `<button name='add-parent' id='add-parent' type='button'>Add Parent Dropdown</button>`;
+            let parent_button = $("#add-parent");
+            let child_button = $("#add-child");
+            let item_button = $("#add-item");
+            //Download Box
+
+            //Link Box
+            let link_static_box = `
+                <div class="link-password">
+                    <label for="link_password"><input type="text" class="form-control link_password" id="link_password" name="link_password" placeholder="enter link password. example: www.localhost.ir" value=""></label>
+                </div>
+                <div class="product-name">
+                    <label for="link_name"><input type="text" class="form-control link_name" id="link_name" name="link_name" placeholder="enter link name. example: VLC Player" value=""></label>
+                </div>
+            `;
+            let add_link_button = `<button name='add-link' id='add-link' type='button'>Add new link</button>`;
+            let link_button = $("#add-link");
+            //Link Box
+
+            //Gallery Box
+            let image_preview_frame = `<div id="gallery_frame"></div>`;
+            let add_image_button = `<button name='add-image' id='add-image' type='button'>Add new image</button>`;
+            let image_button = $("#add-image");
+            //Gallery Box
+
+            //Info Box
+            let add_info_fields = `<button name='add-info' id='add-info' type='button'>Add Info Field</button>`;
+            //Info Box
+
+            if(clickedButton === 'add-box-btn') {
+                boxSetup.show();
+                let selected_box = $("#post-type").val();
+                if (selected_box.length && selected_box !== 'no media') {
+                    switch (selected_box) {
+                        case 'galleryBox': {
+                            if(!_GALLERY_BOX_ADDED) {
+                                _GALLERY_BOX_ADDED = true;
+                                useGalleryBox.val("true");
+                                gallerySection.show();
+                                let GallerySection = $('.gallery-section');
+                                GallerySection.append(`<div class='gallery-box-elements'></div>`);
+                                let GalleryBox = $('.gallery-box-elements');
+                                GalleryBox.append(image_preview_frame);
+                                GalleryBox.append(add_image_button);
+                            }
+                            break;
+                        }
+                        case 'linkBox': {
+                            if(!_LINK_BOX_ADDED) {
+                                _LINK_BOX_ADDED = true;
+                                useLinkBox.val("true");
+                                linkSection.show();
+                                let LinkSection = $('.link-section');
+                                LinkSection.append(`<div class='link-box-elements'></div>`);
+                                let LinkBox = $('.link-box-elements');
+                                LinkBox.append(link_static_box);
+                                LinkBox.append(add_link_button);
+                                link_element_data = `{"Id":"${element_link_id}","name":"${$(`#link_name`).val()}","password":"${$(`#link_password`).val()}"}`;
+                            }
+                            break;
+                        }
+                        case 'downloadBox': {
+                            if(!_DOWNLOAD_BOX_ADDED) {
+                                _DOWNLOAD_BOX_ADDED = true;
+                                useDownloadBox.val("true");
+                                downloadSection.show();
+                                let DownloadSection = $('.download-section');
+                                DownloadSection.append(`<div class='download-box-elements'></div>`);
+                                let DownloadBox = $('.download-box-elements');
+                                DownloadBox.append(add_parent_button);
+                            }
+                            break;
+                        }
+                        case 'infoBox': {
+                            if(!_INFO_BOX_ADDED) {
+                                _INFO_BOX_ADDED = true;
+                                useInfoBox.val("true");
+                                infoSection.show();
+                                let InfoSection = $('.info-section');
+                                InfoSection.append(`<div class='info-box-elements'></div>`);
+                                let InfoBox = $('.info-box-elements');
+                                InfoBox.append(add_info_fields);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if(clickedButton === 'remove-box-btn') {
+                let selected_box = $("#post-type").val();
+                if (selected_box.length && selected_box !== 'no media') {
+                    switch (selected_box) {
+                        case 'galleryBox': {
+                            if(_GALLERY_BOX_ADDED) {
+                                _GALLERY_BOX_ADDED = false;
+                                let GalleryBox = $('.gallery-box-elements');
+                                useGalleryBox.val("false");
+                                gallerySection.hide();
+                                galleryBoxElements.remove();
+                                GalleryBox.remove();
+                                gallery_element_data = {};
+                                $('#gallery_elements_data').val("");
+                                element_gallery_id = 0;
+                                image_button.remove();
+                            }
+                            break;
+                        }
+                        case 'linkBox': {
+                            if(_LINK_BOX_ADDED) {
+                                _LINK_BOX_ADDED = false;
+                                let LinkBox = $('.link-box-elements');
+                                useLinkBox.val("false");
+                                linkSection.hide();
+                                linkBoxElements.remove();
+                                LinkBox.remove();
+                                link_element_data = {};
+                                $('#link_elements_data').val("");
+                                element_link_id = 0;
+                                link_button.remove();
+                            }
+                            break;
+                        }
+                        case 'downloadBox': {
+                            if(_DOWNLOAD_BOX_ADDED) {
+                                _DOWNLOAD_BOX_ADDED = false;
+                                let DownloadBox = $('.download-box-elements');
+                                useDownloadBox.val("false");
+                                downloadSection.hide();
+                                downloadBoxElements.remove();
+                                DownloadBox.remove();
+                                element_data = {};
+                                $('#download_elements_data').val("");
+                                element_parent_id = 0;
+                                element_child_id = 0;
+                                element_item_id = 0;
+                                parent_button.remove();
+                                child_button.remove();
+                                item_button.remove();
+                            }
+                            break;
+                        }
+                        case 'infoBox': {
+                            if(_INFO_BOX_ADDED) {
+                                _INFO_BOX_ADDED = false;
+                                let InfoBox = $('.info-box-elements');
+                                useInfoBox.val("false");
+                                infoSection.hide();
+                                infoBoxElements.remove();
+                                InfoBox.remove();
+                                info_element_data = {};
+                                $('#info_elements_data').val("");
+                                element_info_id = 0;
+                                add_info_fields.remove();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        form_group.on('click', "#add-parent, #add-child, #add-item, #add-link, #add-image, #add-info, #remove-parent, #remove-child, #remove-item, #remove-link, #remove-image, #remove-info", function() {
+            let clickedButton = $(this);
+
+            if(clickedButton.attr('id') === 'add-parent')
+            {
+                let boxShowOff = $(`.download-box-elements`);
+                boxShowOff.append(`<div class='element-parent-item-${element_parent_id}'></div>`);
+
+                let elementItem = $(`.element-parent-item-${element_parent_id}`);
+                let parent_title = `<label for="parent_title"><input type="text" class="form-control parent_title" name="parent_title" data-parent="${element_parent_id}" id="parent_title-${element_parent_id}" placeholder="enter parent title" value=""></label>`;
+                let remove_parent = `<button type="button" class="close" id="remove-parent" data-parent="${element_parent_id}" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+
+                elementItem.append(parent_title);
+                elementItem.append(remove_parent);
+                let add_child_button = `<button name='add-child' id='add-child' data-parent="${element_parent_id}" value='${element_parent_id}' type='button'>Add Child Dropdown</button>`;
+                elementItem.append(add_child_button);
+                let parent_title_val = $(`#parent_title-${element_parent_id}`).val();
+                let parse_obj = [];
+                parse_obj = JSON.parse(element_data);
+                let dataParent = {};
+                dataParent = { Id: element_parent_id, title: parent_title_val };
+                if(!parse_obj)
+                    parse_obj = [];
+                parse_obj.push(dataParent);
+                element_data = JSON.stringify(parse_obj);
+                element_parent_id++;
+            }
+            if(clickedButton.attr('id') === 'add-child')
+            {
+                let Parent_Id = $(this).data('parent');
+                let boxParent = $(`.element-parent-item-${Parent_Id}`);
+                boxParent.append(`<div class='element-child-item-${element_child_id}'></div>`);
+                let elementChild = $(`.element-child-item-${element_child_id}`);
+                let child_title = `<label for="child_title-${element_child_id}"><input type="text" class="form-control child_title" data-parent="${Parent_Id}" data-child="${element_child_id}" name="child_title" id="child_title-${element_child_id}" placeholder="enter child title" value=""></label>`;
+                let remove_child = `<button type="button" class="close" id="remove-child" data-parent="${Parent_Id}" data-child="${element_child_id}" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+
+                elementChild.append(child_title);
+                elementChild.append(remove_child);
+
+                let add_item_button = `<button name='add-item-${element_child_id}' id='add-item' data-child="${element_child_id}" data-parent="${Parent_Id}" value='${element_child_id}' type='button'>Add Item To Child Dropdown</button>`;
+                elementChild.append(add_item_button);
+
+                let parse_obj = [];
+                parse_obj = JSON.parse(element_data);
+                let dataChild = {};
+                let child_title_val = $(`#child_title-${element_child_id}`).val();
+                dataChild = { Id: element_child_id, title: child_title_val };
+                if(!parse_obj[Parent_Id].childs)
+                    parse_obj[Parent_Id].childs = [];
+                parse_obj[Parent_Id].childs.push(dataChild);
+                element_data = JSON.stringify(parse_obj);
+                element_child_id++;
+            }
+            if(clickedButton.attr('id') === 'add-item')
+            {
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let boxChild = $(`.element-parent-item-${Parent_Id} > .element-child-item-${Child_Id}`);
+                boxChild.append(`<div class='element-item-item-${element_item_id}'></div>`);
+                let elementItem = $(`.element-item-item-${element_item_id}`);
+                let item_Title = `<label for="item_title-${element_item_id}"><input type="text" class="form-control item_title" data-parent="${Parent_Id}" data-child="${Child_Id}" data-item="${element_item_id}" name="item_title" id="item_title-${element_item_id}" placeholder="enter item title" value=""></label>`;
+                let item_episode = `<label for="item_episode-${element_item_id}"><input type="text" class="form-control item_episode" data-parent="${Parent_Id}" data-child="${Child_Id}" data-item="${element_item_id}" name="item_episode" id="item_episode-${element_item_id}" placeholder="enter item episode" value=""></label>`;
+                let item_subtitle = `<label for="item_subtitle-${element_item_id}"><input type="text" class="form-control item_subtitle" data-parent="${Parent_Id}" data-child="${Child_Id}" data-item="${element_item_id}" name="item_subtitle" id="item_subtitle-${element_item_id}" placeholder="enter item subtitle" value=""></label>`;
+                let remove_item = `<button type="button" class="close" id="remove-item" data-parent="${Parent_Id}" data-child="${Child_Id}" data-item="${element_item_id}" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+
+                elementItem.append(item_Title);
+                elementItem.append(item_episode);
+                elementItem.append(item_subtitle);
+                elementItem.append(remove_item);
+
+                let parse_obj = [];
+                parse_obj = JSON.parse(element_data);
+                let dataItem = {};
+                let item_title_val = $(`#item_title-${element_item_id}`).val();
+                let item_episode_val = $(`#item_episode-${element_item_id}`).val();
+                let item_subtitle_val = $(`#item_subtitle-${element_item_id}`).val();
+                let newChild_Id = -1;
+                if(Child_Id !== 0)
+                    newChild_Id = parse_obj[Parent_Id].childs.length - 1;
+                else
+                    newChild_Id = Child_Id;
+                dataItem = { Id: element_item_id, title: item_title_val, episode: item_episode_val, subtitle: item_subtitle_val };
+                element_item_id++;
+                if(parse_obj[Parent_Id].childs[newChild_Id].items !== undefined)
+                    parse_obj[Parent_Id].childs[newChild_Id].items.push(dataItem);
+                else {
+                    parse_obj[Parent_Id].childs[newChild_Id].items = [];
+                    parse_obj[Parent_Id].childs[newChild_Id].items.push(dataItem);
+                }
+                element_data = JSON.stringify(parse_obj);
+            }
+            if(clickedButton.attr('id') === 'add-link') {
+                let boxShowOff = $(`.link-box-elements`);
+                boxShowOff.append(`<div class='element-link-item-${element_link_id}'></div>`);
+                let elementItem = $(`.element-link-item-${element_link_id}`);
+                let link_title = `<label for="link_title"><input type="text" class="form-control link_title" name="link_title" data-link="${element_link_id}" id="link_title-${element_link_id}" placeholder="enter link title, example: download 32bit version" value=""></label>`;
+                let link_address = `<label for="link_address"><input type="text" class="form-control link_address" name="link_address" data-link="${element_link_id}" id="link_address-${element_link_id}" placeholder="enter link address, example: www.localhost/dl/32bit.zip" value=""></label>`;
+                let remove_link = `<button type="button" class="close" id="remove-link" data-link="${element_link_id}" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+
+                elementItem.append(link_title);
+                elementItem.append(link_address);
+                elementItem.append(remove_link);
+
+                let parse_obj = [];
+                parse_obj = JSON.parse(link_element_data);
+                let dataItem = {};
+                let link_title_val = $(`#link_title-${element_link_id}`).val();
+                let link_address_val = $(`#link_address-${element_link_id}`).val();
+                dataItem = { Id: element_link_id, title: link_title_val, address: link_address_val };
+
+                element_link_id++;
+                if(parse_obj.links !== undefined)
+                    parse_obj.links.push(dataItem);
+                else {
+                    parse_obj.links = [];
+                    parse_obj.links.push(dataItem);
+                }
+                link_element_data = JSON.stringify(parse_obj);
+            }
+            if(clickedButton.attr('id') === 'add-image') {
+                let boxShowOff = $(`.gallery-box-elements`);
+                boxShowOff.append(`<div class='element-gallery-item-${element_gallery_id}'></div>`);
+                let elementItem = $(`.element-gallery-item-${element_gallery_id}`);
+                let gallery_image = `<label for="gallery_image"><input type="file" class="hidden form-control gallery_image" name="gallery_image" data-gallery="${element_gallery_id}" id="gallery_image-${element_gallery_id}" accept="image/jpeg, image/png"></label>`;
+                let gallery_button = `<div class="gallery_button_upload" id="gallery_button_upload-${element_gallery_id}"><label for="gallery_image-${element_gallery_id}">image ${element_gallery_id+1}: <span>Select</span></label></div>`;
+                let remove_gallery = `<button type="button" class="close" id="remove-image" data-gallery="${element_gallery_id}" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+                elementItem.append(gallery_image);
+                elementItem.append(remove_gallery);
+                elementItem.append(gallery_button);
+
+                element_gallery_id++;
+            }
+
+            if(clickedButton.attr('id') === 'add-info') {
+                let boxShowOff = $(`.info-box-elements`);
+                boxShowOff.append(`<div id="element-info-item" class='element-info-item-${element_info_id}'></div>`);
+                let elementItem = $(`.element-info-item-${element_info_id}`);
+                let info_box_field_icon = `<select class="form-control info_icon" name="info_icon" id="info_icon-${element_info_id}" data-info="${element_info_id}"><option value="">select icon</option><option value="<i class='fa-solid fa-eye'></i>" data-info="${element_info_id}">&#xf06e;</option><option value="<i class='fa-solid fa-calendar-check'></i>" data-info="${element_info_id}">&#xf274;</option><option value="<i class='fa-solid fa-clock'></i>" data-info="${element_info_id}">&#xf017;</option><option value="<i class='fa-solid fa-plus'></i>" data-info="${element_info_id}">&#x2b;</option><option value="<i class='fa-solid fa-cloud-download-alt'></i>" data-info="${element_info_id}"></option><option value="<i class='fa-sharp fa-solid fa-tv'></i>" data-info="${element_info_id}"></option><option value="<i class='fa-solid fa-file-arrow-down'></i>" data-info="${element_info_id}"></option></select>`;
+                let info_field_property = `<label for="info_property"><input type="text" class="form-control info_property" name="info_property" data-info="${element_info_id}" id="info_property-${element_info_id}" placeholder="enter info property, example: Release Date" value=""></label>`;
+                let info_field_value = `<label for="info_value"><input type="text" class="form-control info_value" name="info_value" data-info="${element_info_id}" id="info_value-${element_info_id}" placeholder="enter info value, example: 2023" value=""></label>`;
+                let remove_info = `<button type="button" class="close" id="remove-info" data-info="${element_info_id}" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+                elementItem.append(info_box_field_icon);
+                elementItem.append(info_field_property);
+                elementItem.append(info_field_value);
+                elementItem.append(remove_info);
+                let parse_obj = [];
+                let dataItem = {};
+                if(info_element_data.length > 0)
+                    parse_obj = JSON.parse(info_element_data);
+                else
+                    parse_obj = info_element_data;
+                let info_box_field_icon_val = $(`#info_icon-${element_info_id}`).val();
+                let info_field_property_val = $(`#info_property-${element_info_id}`).val();
+                let info_field_value_val = $(`#info_value-${element_info_id}`).val();
+                dataItem = { Id: element_info_id, icon: info_box_field_icon_val, property: info_field_property_val, value: info_field_value_val };
+                parse_obj.push(dataItem);
+                info_element_data = JSON.stringify(parse_obj);
+                element_info_id++;
+            }
+
+            if(clickedButton.attr('id') === 'remove-parent') {
+                let Parent_Id = $(this).data('parent');
+                let parentElement = $(`.element-parent-item-${Parent_Id}`);
+                element_parent_id--;
+                parentElement.remove();
+                let parse_obj = JSON.parse(element_data);
+                parse_obj.splice(-Parent_Id, 1);
+                element_data = JSON.stringify(parse_obj);
+                $('#download_elements_data').val(element_data);
+            }
+            if(clickedButton.attr('id') === 'remove-child') {
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let childElement = $(`.element-parent-item-${Parent_Id} > .element-child-item-${Child_Id}`);
+                childElement.remove();
+                let parse_obj = JSON.parse(element_data);
+                parse_obj[Parent_Id].childs.splice(-Child_Id, 1);
+                element_data = JSON.stringify(parse_obj);
+                $('#download_elements_data').val(element_data);
+            }
+            if(clickedButton.attr('id') === 'remove-item') {
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let Item_Id = $(this).data('item');
+                let itemElement = $(`.element-parent-item-${Parent_Id} > .element-child-item-${Child_Id} > .element-item-item-${Item_Id}`);
+                itemElement.remove();
+                let parse_obj = JSON.parse(element_data);
+                parse_obj[Parent_Id].childs[Child_Id].items.splice(-Item_Id, 1);
+                element_data = JSON.stringify(parse_obj);
+                $('#download_elements_data').val(element_data);
+            }
+            if(clickedButton.attr('id') === 'remove-link') {
+                let Link_Id = $(this).data('link');
+                let linkElement = $(`.element-link-item-${Link_Id}`);
+                linkElement.remove();
+                let parse_obj = JSON.parse(link_element_data);
+                parse_obj.links.splice(Link_Id, 1);
+                link_element_data = JSON.stringify(parse_obj);
+                $('#link_elements_data').val(link_element_data);
+
+                if(element_link_id >= 1)
+                    element_link_id--;
+                else
+                    element_link_id = 0;
+            }
+            if(clickedButton.attr('id') === 'remove-image') {
+
+                let Gallery_Id = $(this).data('gallery');
+                let galleryElement = $(`.element-gallery-item-${Gallery_Id}`);
+                let uploaded_image = $(`#preview_image-${Gallery_Id}`);
+                galleryElement.remove();
+                uploaded_image.remove();
+                let parse_obj = JSON.parse(gallery_element_data);
+                parse_obj.splice(Gallery_Id, 1);
+                gallery_element_data = JSON.stringify(parse_obj);
+                $('#gallery_elements_data').val(gallery_element_data);
+                if(element_gallery_id >= 1)
+                    element_gallery_id--;
+                else
+                    element_gallery_id = 0;
+            }
+            if(clickedButton.attr('id') === 'remove-info') {
+                let Info_Id = $(this).data('info');
+                let infoElement = $(`.element-info-item-${Info_Id}`);
+                infoElement.remove();
+                let parse_obj = JSON.parse(info_element_data);
+                parse_obj.splice(Info_Id, 1);
+                info_element_data = JSON.stringify(parse_obj);
+                $('#info_elements_data').val(info_element_data);
+                if(element_info_id >= 1)
+                    element_info_id--;
+                else
+                    element_info_id = 0;
+            }
+        });
+
+        $(document).on('change keyup paste', '.parent_title, .child_title, .item_title, .item_subtitle, .item_episode, .link_title, .link_address, .link_password, .link_name, .info_icon, .info_property, .info_value', function (e) {
+            const InputName = $(this);
+
+            if(InputName.attr('name') === 'parent_title') {
+                let Parent_Id = $(this).data('parent');
+                let EleData = JSON.parse(element_data);
+                EleData[Parent_Id].title = InputName.val();
+                element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'child_title') {
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let EleData = JSON.parse(element_data);
+
+                let newChild_Id = -1;
+                if(Child_Id !== 0)
+                    newChild_Id =  EleData[Parent_Id].childs.length - 1;
+                else
+                    newChild_Id = Child_Id;
+
+                EleData[Parent_Id].childs[newChild_Id].title = InputName.val();
+                element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'item_title') {
+
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let Item_Id = $(this).data('item');
+                let EleData = JSON.parse(element_data);
+
+                let newChild_Id = -1;
+                if(Child_Id !== 0)
+                    newChild_Id =  EleData[Parent_Id].childs.length - 1;
+                else
+                    newChild_Id = Child_Id;
+
+                let maxItems = EleData[Parent_Id].childs[newChild_Id].items.length;
+                if(EleData[Parent_Id].childs[newChild_Id].items[Item_Id] !== undefined)
+                    EleData[Parent_Id].childs[newChild_Id].items[Item_Id].title = InputName.val();
+                else
+                    EleData[Parent_Id].childs[newChild_Id].items[maxItems-1].title = InputName.val();
+                element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'item_episode') {
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let Item_Id = $(this).data('item');
+                let EleData = JSON.parse(element_data);
+
+                let newChild_Id = -1;
+                if(Child_Id !== 0)
+                    newChild_Id =  EleData[Parent_Id].childs.length - 1;
+                else
+                    newChild_Id = Child_Id;
+
+                let maxItems = EleData[Parent_Id].childs[newChild_Id].items.length;
+                if(EleData[Parent_Id].childs[newChild_Id].items[Item_Id] !== undefined)
+                    EleData[Parent_Id].childs[newChild_Id].items[Item_Id].episode = InputName.val();
+                else
+                    EleData[Parent_Id].childs[newChild_Id].items[maxItems-1].episode = InputName.val();
+                element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'item_subtitle') {
+                let Parent_Id = $(this).data('parent');
+                let Child_Id = $(this).data('child');
+                let Item_Id = $(this).data('item');
+                let EleData = JSON.parse(element_data);
+
+                let newChild_Id = -1;
+                if(Child_Id !== 0)
+                    newChild_Id =  EleData[Parent_Id].childs.length - 1;
+                else
+                    newChild_Id = Child_Id;
+
+                let maxItems = EleData[Parent_Id].childs[newChild_Id].items.length;
+                if(EleData[Parent_Id].childs[newChild_Id].items[Item_Id] !== undefined)
+                    EleData[Parent_Id].childs[newChild_Id].items[Item_Id].subtitle = InputName.val();
+                else
+                    EleData[Parent_Id].childs[newChild_Id].items[maxItems-1].subtitle = InputName.val();
+                element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'link_name') {
+                let EleData = JSON.parse(link_element_data);
+                EleData.name = InputName.val();
+                link_element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'link_password') {
+                let EleData = JSON.parse(link_element_data);
+                EleData.password = InputName.val();
+                link_element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'link_title') {
+                let Link_Id = $(this).data('link');
+                let EleData = JSON.parse(link_element_data);
+                EleData.links[Link_Id].title = InputName.val();
+                link_element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'link_address') {
+                let Link_Id = $(this).data('link');
+                let EleData = JSON.parse(link_element_data);
+                EleData.links[Link_Id].address = InputName.val();
+                link_element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'info_icon') {
+                let Info_Id = $(this).data('info');
+                let EleData = JSON.parse(info_element_data);
+                EleData[Info_Id].icon = InputName.val();
+                info_element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'info_property') {
+                let Info_Id = $(this).data('info');
+                let EleData = JSON.parse(info_element_data);
+                EleData[Info_Id].property = InputName.val();
+                info_element_data = JSON.stringify(EleData);
+            }
+            if(InputName.attr('name') === 'info_value') {
+                let Info_Id = $(this).data('info');
+                let EleData = JSON.parse(info_element_data);
+                EleData[Info_Id].value = InputName.val();
+                info_element_data = JSON.stringify(EleData);
+            }
+
+            $('#download_elements_data').val(element_data);
+            $('#link_elements_data').val(link_element_data);
+            $('#gallery_elements_data').val(gallery_element_data);
+            $('#info_elements_data').val(info_element_data);
+
+        });
+        $(document).on('change', '.gallery_image', function (e) {
+            let files = this.files;
+            let Image_Id = $(this).data('gallery');
+            if(files && files[0]) {
+                let uploaded_image = $(`#preview_image-${Image_Id}`);
+                if (uploaded_image.length <= 0) {
+                    let preview_frame = $("#gallery_frame");
+                    let img = $(`<img src="" alt="" />`);
+                    img.attr("style", "width: 150px; height:150px; padding: 10px");
+                    img.attr("src", window.URL.createObjectURL(files[0]));
+                    img.attr("alt", Image_Id);
+                    img.attr("name", `preview_image`);
+                    img.attr("class", `preview_image`);
+                    img.attr("id", `preview_image-${Image_Id}`);
+                    preview_frame.append(img);
+                    $(`#gallery_button_upload-${Image_Id} > label span`).text('Change');
+                } else {
+                    uploaded_image.attr('src', window.URL.createObjectURL(files[0]));
+                }
+                let parse_obj = [];
+                parse_obj = JSON.parse(gallery_element_data);
+                let dataItem = {};
+                dataItem = { Id: Image_Id, image: files[0].name };
+                parse_obj.push(dataItem);
+                gallery_element_data = JSON.stringify(parse_obj);
+            }
+            $('#gallery_elements_data').val(gallery_element_data);
+        });
+
+        setInterval(function () {
+            let Theme_Have_Custom_settings = $("input[name='Theme_Have_Custom_settings']").val();
+            let custom_set = $(".custom-template-settings");
+            if(Theme_Have_Custom_settings === 'true')
+            {
+                custom_set.show();
+            }
+            if(Theme_Have_Custom_settings === 'false') {
+                custom_set.hide();
+            }
+        });
+    });
+
+    function appendObjTo(thatArray, newObj) {
+        const frozenObj = Object.freeze(newObj);
+        return Object.freeze(thatArray.concat(frozenObj));
+    }
+</script>

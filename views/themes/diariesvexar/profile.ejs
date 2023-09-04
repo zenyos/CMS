@@ -1,0 +1,173 @@
+<head>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+
+    <title><%- user.firstName%>'s profile</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/template_assets/diariesvexar/css/profile-style.css">
+    <link rel="stylesheet" href="/template_assets/diariesvexar/css/bootstrap-style.css">
+
+</head>
+<body class="img-profile js-fullheight">
+    <div class="container">
+        <div class="content-wrapper">
+            <%- include('messages') -%>
+            <% if(profile_Errors) { %>
+                <% if(profile_Errors.message && profile_Errors.message.length > 0) { %>
+                    <% if(profile_Errors.message.indexOf('ERROR: ') > -1) { %>
+                        <div class="alert alert-danger alert-dismissible fade show auto-hide" role="alert">
+                            <strong><%- profile_Errors.message %></strong>
+                        </div>
+                    <% } else { %>
+                        <div class="alert alert-success alert-dismissible fade show mt-2 auto-hide" role="alert">
+                            <strong><%- profile_Errors.message %></strong>
+                        </div>
+                    <% } %>
+                <% } %>
+            <% } %>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="row gutters">
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="account-settings">
+                                <div class="user-profile">
+                                    <div class="user-avatar">
+                                        <div class="personal-image">
+                                            <label for="user_avatar">
+                                                <input type="file" name="user_avatar" id="user_avatar" accept="image/jpeg, image/png"" />
+                                                <figure class="personal-figure">
+                                                    <img src="/uploads/avatars/<%- user.avatar %>" class="personal-avatar" id="personal-avatar" alt="avatar">
+                                                    <figcaption class="personal-figcaption">
+                                                        <img src="/template_assets/diariesvexar/img/camera-white.png" alt="">
+                                                    </figcaption>
+                                                </figure>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <h5 class="user-name"><%- user.firstName %> <%- user.lastName %></h5>
+                                    <h6 class="user-email"><%- user.email %></h6>
+                                </div>
+                                <% if(user.aboutUser.length > 0) { %>
+                                    <div class="about">
+                                        <h5>About</h5>
+                                        <p><%- user.aboutUser %></p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <h6 class="mb-2 text-primary">Personal Details</h6>
+                                </div>
+                                <input type="hidden" class="form-control" name="user_id" id="user_id" value="<%- user._id %>">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Enter first name" value="<%- user.firstName %>" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Enter last name" value="<%- user.lastName %>" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="phone_number">Phone</label>
+                                        <input type="text" class="form-control" name="phone_number" id="phone_number" placeholder="Enter phone number" value="<%- user.phoneNumber %>">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="website_address">Website URL</label>
+                                        <input type="url" class="form-control" name="website_address" id="website_address" placeholder="Website url" value="<%- user.websiteAddress %>">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="about_user">About</label>
+                                        <input type="text" class="form-control" name="about_user" id="about_user" placeholder="About yourself ..." value="<%- user.aboutUser %>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="text-right profile-buttons">
+                                        <button type="button" id="cancel-update" name="cancel-update" class="btn btn-secondary">Cancel</button>
+                                        <button type="button" id="update-profile" name="update-profile" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<!-- Bootstrap core JavaScript -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script>
+    $("#user_avatar").change(function () {
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#personal-avatar').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.auto-hide').slideUp(300);
+            $('.auto-hide').remove();
+        }, 2000);
+    });
+    $("#update-profile").on('click', function (e) {
+        e.preventDefault();
+        let formData = new FormData()
+        let user_avatar = $('#user_avatar')[0].files[0]
+        let first_name = $("#first_name").val();
+        let last_name = $("#last_name").val();
+        let phone_number = $("#phone_number").val();
+        let website_address = $("#website_address").val();
+        let about_user = $("#about_user").val();
+        let user_id = $("#user_id").val();
+        formData.append('user_avatar', user_avatar);
+        formData.append('first_name', first_name);
+        formData.append('last_name', last_name);
+        formData.append('phone_number', phone_number);
+        formData.append('website_address', website_address);
+        formData.append('about_user', about_user);
+        formData.append('user_id', user_id);
+
+        $.ajax({
+            url: `/profile`,
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(res){
+                window.location.href = '/profile';
+            },
+            error: function(){
+                window.location.href = '/profile';
+            }
+        });
+    });
+    $("#cancel-update").on('click', function (e) {
+        window.location.href = '/';
+    });
+</script>
+
+</html>

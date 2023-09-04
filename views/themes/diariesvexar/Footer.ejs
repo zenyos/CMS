@@ -1,0 +1,72 @@
+<!-- Footer -->
+<footer id="footer">
+    <div class="footContent">
+        <div class="footer-link-icon-block">
+            <div class="footer-social-media ac">
+                <p><%- __("Follow Us") %></p>
+                <% if(websiteTelegramURL.length > 0) { %>
+                    <a target="_blank" title="Follow @Diariesvexar on Telegram" href="<%- websiteTelegramURL %>" rel="noreferrer"><i class="fa-brands fa-telegram"></i></a>
+                <% } %>
+                <% if(websiteInstagramURL.length > 0) { %>
+                    <a target="_blank" title="Follow Diariesvexar on Instagram" href="<%- websiteInstagramURL %>" rel="noreferrer"><i class="fa-brands fa-instagram"></i></a>
+                <% } %>
+                <% if(websiteFacebookURL.length > 0) { %>
+                    <a target="_blank" title="Follow Diariesvexar on Instagram" href="<%- websiteFacebookURL %>" rel="noreferrer"><i class="fa-brands fa-facebook"></i></a>
+                <% } %>
+                <% if(websiteGooglePlusURL.length > 0) { %>
+                    <a target="_blank" title="Follow Diariesvexar on Instagram" href="<%- websiteGooglePlusURL %>" rel="noreferrer"><i class="fa-brands fa-google-plus"></i></a>
+                <% } %>
+                <% if(websiteTwitterURL.length > 0) { %>
+                    <a target="_blank" title="Follow Diariesvexar on Instagram" href="<%- websiteTwitterURL %>" rel="noreferrer"><i class="fa-brands fa-twitter"></i></a>
+                <% } %>
+                <% if(websiteLinkedInURL.length > 0) { %>
+                    <a target="_blank" title="Follow Diariesvexar on Instagram" href="<%- websiteLinkedInURL %>" rel="noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+                <% } %>
+            </div>
+        </div>
+        <div class="footer-link-block">
+            <p class="footer-link home di-ib">
+                <a href="/">Home</a>
+            </p>
+            <p class="footer-link di-ib">
+                <a href="/about">About</a>
+                <a href="/advertising">Advertising</a>
+                <a href="/privacy_policy">Privacy</a>
+            </p>
+            <p class="footer-link login di-ib">
+                <a href="/login" id="malLogin" rel="nofollow">Login</a>
+                <a href="/register">Sign Up</a>
+            </p>
+        </div>
+        <div class="copyright-footer">
+            <div class="footer-copyright">
+                <p><%- websiteCopyright %></p>
+            </div>
+            <div id="recaptcha-terms">
+                This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.
+            </div>
+        </div>
+    </div>
+    <div id="myOverlay" class="overlay">
+        <span class="closebtn" onclick="closeSearch()" title="Close Overlay">×</span>
+        <div class="overlay-content">
+            <form action="/result" method="post">
+                <label>
+                    <input type="text" name="search_text" placeholder="Search for...">
+                </label>
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+    <div id="scrollTop" class="scrollTop top"><i class="fa fa-arrow-up"></i></div>
+</footer>
+<script src="/template_assets/diariesvexar/js/app.js"></script>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.auto-hide').slideUp(300);
+        }, 2000);
+    });
+</script>
+</body>
+</html>

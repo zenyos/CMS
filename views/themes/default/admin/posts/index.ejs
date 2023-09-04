@@ -1,0 +1,60 @@
+<%- include('../admin-header') -%>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation -->
+    <%- include('../admin-topNav') -%>
+    <div class="content-wrapper">
+        <%- include('../messages') -%>
+        <div class="container">
+            <div class="alert alert-secondary text-center">
+                <h1>ALL POSTS</h1>
+            </div>
+
+            <table class="table table-bordered">
+                <thead class="bg-dark text-center">
+                <tr class="text-white">
+                    <th>Thumbnail</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Comments Allowed</th>
+                    <th>Category</th>
+                    <td>Actions</td>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <% posts.forEach(function(post) { %>
+                    <tr>
+                        <td>
+                            <div class="mb-4 col-md-5 p-10" style="max-height: 200px; max-width: 200px">
+                                <img class="card-img-top img-thumbnail-posts" src="<%- post.file %>" alt="Card image cap">
+                            </div>
+                        </td>
+                        <td><%- post.title %></td>
+                        <td><%- post.user.firstName %> <%- post.user.lastName %></td>
+                        <td><%- post.status %></td>
+                        <td><%- post.allowComments %></td>
+                        <td>
+                            <% post.category.forEach(function (post_cat, index) { %>
+                                <%- post_cat %><br/>
+                            <% }); %>
+                        </td>
+                        <td class="d-flex">
+                        <a href="/admin/posts/edit/<%- post._id %>" class="btn btn-sm btn-warning mr-2">Edit Post</a>
+                        <form action="/admin/posts/delete/<%- post._id %>?newMethod=DELETE" method="post">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete Post</button>
+                        </form>
+                        </td>
+                    </tr>
+                <% }); %>
+
+                </tbody>
+            </table>
+
+        </div>
+        <!-- /.container-fluid -->
+        <!-- /.content-wrapper-->
+        <%- include('../admin-footer') -%>
+    </div>
+</body>
+
+</html>

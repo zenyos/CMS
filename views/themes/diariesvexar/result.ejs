@@ -1,0 +1,38 @@
+<div class="content-wrapper">
+    <%- include('messages') -%>
+</div>
+
+<div class="row">
+    <div class="container-section">
+        <section class="main-section">
+            <article class="main-post-article">
+                <div class="search-result-container">
+                    <h1>Search Engine Page
+                        <br>
+                        <small>looking for: </small><span><%- searchQuery %></span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="leftcolumn">
+                        <% if(selectedPosts.length > 0) { %>
+                            <% selectedPosts.forEach(function(post) { %>
+                                <% if(post._id) {%>
+                                    <div class="card">
+                                        <a href="/post/<%= post._id%>"><h3 class="card-title"><%= post.title %></h3></a>
+                                        <h5>Posted on <%- post.creationDate %> by <a href="/result/user/<%= post.user._id %>"><%- post.user.firstName %> <%- post.user.lastName %></a></h5>
+                                        <img class="main-post-image" src="<%= post.file %>" alt="Card image cap">
+                                        <p><%= post.description %>...</p>
+                                        <br/>
+                                        <a href="/post/<%= post._id %>" title="more" class="more-link"><i class="fas fa-light fa-download"></i> Click for more and download. </a>
+                                    </div>
+                                <% } %>
+                            <% }); %>
+                        <% } %>
+
+                    </div>
+                </div>
+            </article>
+        </section>
+        <%- include('sidepreview') -%>
+    </div>
+</div>

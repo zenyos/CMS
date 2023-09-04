@@ -1,0 +1,93 @@
+<section class="side-section">
+    <article class="side-post-article">
+        <div class="rightcolumn">
+            <div class="card">
+                <div class="sideTitle">
+                    <div class="aside-txt">
+                        <div class="aside-icon"><i class="fas fa-award"></i></div>
+                        <div class="widget-title">
+                            <span class="widget-title-txt">Our Favourite Archive</span>
+                            <a href="#" title="Favourite Archive">More</a>
+                        </div>
+                    </div>
+                </div>
+                <main class="grid-item main">
+                    <div class="items">
+                        <% if(catoLogPosts.length > 0) { %>
+                            <% catoLogPosts.forEach(function(post, index1) { %>
+                                <% post.category.forEach(function(post_cat, index2) { %>
+                                    <% if(post_cat.indexOf("Our Favourite Archive") !== -1) { %>
+                                        <div class="item item<%- index1 + 1 %>">
+                                            <a class="fav-post-link" href="/post/<%- post._id%>" title="<%- post.title %>">
+                                                <img class="fav-post-img" src="<%- post.file %>" alt=""/>
+                                                <h4 class="fav-post-item-title"><%- post.title.substring(0, 15) %></h4>
+                                            </a>
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                </main>
+            </div>
+            <div class="card">
+                <div class="sideTitle">
+                    <div class="aside-txt">
+                        <div class="aside-icon"><i class="fas fa-tv"></i></div>
+                        <div class="widget-title">
+                            <span class="widget-title-txt">Top Airing Anime</span>
+                            <a href="#" title="Favourite Archive">More</a>
+                        </div>
+                    </div>
+                </div>
+                <main class="grid-item main">
+                    <div class="items">
+                        <% if(catoLogPosts.length > 0) { %>
+                            <% catoLogPosts.forEach(function(post, index1) { %>
+                                <% post.category.forEach(function(post_cat, index2) { %>
+                                    <% if(post_cat.indexOf("Top Airing Anime") !== -1) { %>
+                                        <div class="item item<%- index1 + 1 %>">
+                                            <a class="fav-post-link" href="/post/<%- post._id%>" title="<%- post.title %>">
+                                                <img class="fav-post-img" src="<%- post.file %>" alt=""/>
+                                                <h4 class="fav-post-item-title"><%- post.title.substring(0, 15) %></h4>
+                                            </a>
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                </main>
+            </div>
+            <div class="card">
+                <div class="sideTitle">
+                    <div class="aside-txt">
+                        <div class="aside-icon"><i class="fa-sharp fa-solid fa-film"></i></div>
+                        <div class="widget-title">
+                            <span class="widget-title-txt">Top Upcoming Anime</span>
+                            <a href="#" title="Favourite Archive">More</a>
+                        </div>
+                    </div>
+                </div>
+                <main class="grid-item main">
+                    <div class="items">
+                        <% if(catoLogPosts.length > 0) { %>
+                            <% catoLogPosts.forEach(function(post, index1) { %>
+                                <% post.category.forEach(function(post_cat, index2) { %>
+                                    <% if(post_cat.indexOf("Top Upcoming Anime") !== -1) { %>
+                                        <div class="item item<%- index1 + 1 %>">
+                                            <a class="fav-post-link" href="/post/<%- post._id%>" title="<%- post.title %>">
+                                                <img class="fav-post-img" src="<%- post.file %>" alt=""/>
+                                                <h4 class="fav-post-item-title"><%- post.title.substring(0, 15) %></h4>
+                                            </a>
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </article>
+</section>

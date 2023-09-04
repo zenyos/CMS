@@ -1,0 +1,155 @@
+<div class="content-wrapper">
+    <%- include('messages') -%>
+</div>
+<div class="row">
+    <div class="content-container">
+        <% if(catoLogPosts.length > 0) { %>
+        <div class="movie-list-container">
+            <h1 class="movie-list-title"><%= __("SUGGESTIONS")%><a class="top-nav-texts" href="/result/Suggested"><span class="movie-list-title-more">More...</span></a></h1>
+            <div class="suggestion-movies">
+                <ul>
+                    <% catoLogPosts.forEach(function(post, index) { %>
+                        <% post.category.forEach(function(category, index) { %>
+                            <% if(category.length > 0 && category === "Suggested") { %>
+                                <li>
+                                    <div class="featured-content">
+                                        <img class="featured-title" src="<%- post.file %>" alt="Suggested post-<%- post._id %>">
+                                        <div class="featured-desc">
+                                            <p> <%= post.description.substring(0, 250) + "..." %> </p>
+                                        </div>
+                                        <a href="/post/<%- post._id %>" class="featured-button">More</a>
+                                    </div>
+                                </li>
+                            <% } %>
+                        <% }); %>
+                    <% }); %>
+                </ul>
+            </div>
+        </div>
+        <% } %>
+        <% if(catoLogPosts.length > 0) { %>
+        <div class="movie-list-container">
+            <h1 class="movie-list-title">TOP RATED<a class="top-nav-texts" href="/result/Top Rated"><span class="movie-list-title-more">More...</span></a></h1>
+            <div class="movie-list-wrapper">
+                <div class="movie-list">
+                    <% catoLogPosts.forEach(function(post, index) { %>
+                        <% post.category.forEach(function(category, index) { %>
+                            <% if(category.length > 0 && category === "Top Rated") { %>
+                                <div class="movie-list-item">
+                                    <img class="movie-list-item-img" src="<%- post.file %>" alt="Top Rated-<%- post._id %>">
+                                    <div class="movie-list-item-info-box"></div>
+                                    <span class="movie-list-item-title"><%- post.title.substring(0, 15) %>...</span>
+                                    <p class="movie-list-item-desc"><%= post.description.substring(0, 60) + "..." %></p>
+                                    <a href="/post/<%- post._id %>" class="movie-list-item-button">More</a>
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    <% }); %>
+                </div>
+                <i class="fas fa-chevron-right arrow"></i>
+            </div>
+        </div>
+        <% } %>
+        <% if(catoLogPosts.length > 0) { %>
+        <div class="movie-list-container">
+            <h1 class="movie-list-title">MOST POPULAR<a class="top-nav-texts" href="/result/Most Popular"><span class="movie-list-title-more">More...</span></a></h1>
+            <div class="movie-list-wrapper">
+                <div class="movie-list">
+                    <% catoLogPosts.forEach(function(post, index) { %>
+                        <% post.category.forEach(function(category, index) { %>
+                            <% if(category.length > 0 && category === "Most Popular") { %>
+                                <div class="movie-list-item">
+                                    <img class="movie-list-item-img" src="<%- post.file %>" alt="Most Popular-<%- post._id %>">
+                                    <div class="movie-list-item-info-box"></div>
+                                    <span class="movie-list-item-title"><%- post.title.substring(0, 15) %>...</span>
+                                    <p class="movie-list-item-desc"><%= post.description.substring(0, 60) + "..." %></p>
+                                    <a href="/post/<%- post._id %>" class="movie-list-item-button">More</a>
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    <% }); %>
+                </div>
+                <i class="fas fa-chevron-right arrow"></i>
+            </div>
+        </div>
+        <% } %>
+    </div>
+    <div class="container-section">
+        <section class="main-section">
+            <article class="main-post-article">
+                <div class="row">
+                    <div class="leftcolumn">
+                        <% if(posts.length > 0) { %>
+                            <% posts.forEach(function(post) { %>
+                            <div class="card">
+                                <a href="/post/<%= post._id%>"><h3 class="card-title"><%= post.title %></h3></a>
+                                <% if(post.user) { %>
+                                    <h5>Posted on <%- post.creationDate %> by <a href="/result/user/<%= post.user._id %>"><%- post.user.firstName %> <%- post.user.lastName %></a></h5>
+                                <% } %>
+                                <img class="main-post-image" src="<%= post.file %>" alt="Card image cap">
+                                <p><%= post.description %> ...</p>
+                                <br/>
+                                <a href="/post/<%= post._id%>" title="more" class="more-link"><i class="fas fa-light fa-download"></i> Click for more and download. </a>
+                            </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="card">
+                                <h3 class="card-title">No post shared yet</h3>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <%- include('sidepreview') -%>
+    </div>
+    <div class="pagenaviWrapper">
+        <% let page_limit = websitePaginationLimit; %>
+        <% let pagesLite = []; %>
+        <% for (let i = 1; i <= maxPages; i++) { %>
+            <% let offset = i === 1 || maxPages ? page_limit + 1 : page_limit; %>
+            <% if (i === 1 || (current_page - offset <= i && current_page + offset >= i) || i === current_page || i === maxPages) { %>
+                <% pagesLite.push(i); %>
+            <% } else if (i === current_page - (offset + 1) || i === current_page + (offset + 1)) { %>
+                <% pagesLite.push('...'); %>
+            <% } %>
+        <% } %>
+        <% if(current_page > 1) { newPrevPage = current_page - 1; } else { newPrevPage = current_page; } %>
+        <a class="prev page-numbers <%if(current_page <= 1) {%>invisible<%}else{}%>" href="<%- newPrevPage %>"><i class="fas fa-angle-double-left " title="prev page"></i></a>
+        <% pagesLite.forEach(function(page, index, array) { %>
+            <% if(page !== '...') { %>
+                <a class="page-link" href="/page/<%- page %>"><span aria-current="page" class="page-numbers <% if(page === current_page) { %>current<%}else{}%>"><%- page %></span></a>
+            <% } else { %>
+                <span aria-current="page" class="page-numbers dots"><%- page %></span>
+            <% } %>
+        <% }); %>
+        <% let newNextPage;%>
+        <% if(current_page < maxPages) { newNextPage = current_page + 1; } else { newNextPage = current_page; } %>
+        <a class="next page-numbers <% if(current_page >= maxPages) { %>invisible<% }else{} %>" href="/page/<%- newNextPage %>"><i class="fas fa-angle-double-right" title="next page"></i></a>
+    </div>
+    <% if(catoLogPosts.length > 0) { %>
+    <div class="content-container">
+        <div class="movie-list-container">
+            <h1 class="movie-list-title">SEASONAL ANIME<a class="top-nav-texts" href="/result/Seasonal Anime"><span class="movie-list-title-more">More...</span></a></h1>
+            <div class="movie-list-wrapper">
+                <div class="movie-list">
+                    <% catoLogPosts.forEach(function(post, index) { %>
+                        <% post.category.forEach(function(category, index) { %>
+                            <% if(category.length > 0 && category === "Seasonal Anime") { %>
+                                <div class="movie-list-item">
+                                    <img class="movie-list-item-img" src="<%- post.file %>" alt="Seasonal Anime-<%- post._id %>">
+                                    <div class="movie-list-item-info-box"></div>
+                                    <span class="movie-list-item-title"><%- post.title.substring(0, 15) %>...</span>
+                                    <p class="movie-list-item-desc"><%= post.description.substring(0, 60) + "..." %></p>
+                                    <a href="/post/<%- post._id %>" class="movie-list-item-button">More</a>
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    <% }); %>
+                </div>
+                <i class="fas fa-chevron-right arrow"></i>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>

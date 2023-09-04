@@ -1,0 +1,53 @@
+<%- include('../admin-header') -%>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation -->
+    <%- include('../admin-topNav') -%>
+    <div class="content-wrapper">
+        <%- include('../messages') -%>
+        <div class="container">
+            <h1>Edit User #<%- user.firstName %> #<%- user.lastName %></h1>
+            <div class="row p-4">
+                <div class="col-md-10">
+                    <form action="/admin/users/edit/<%- user._id %>?newMethod=PUT" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="firstName">Firstname</label>
+                            <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Enter firstname" value="<%- user.firstName %>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Lastname</label>
+                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Enter lastname" value="<%- user.lastName %>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" name="email" id="email" placeholder="Enter email" value="<%- user.email %>">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="text" class="form-control" name="password" id="password" placeholder="Enter new password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="level">Level</label>
+                            <select name="level" id="level" class="form-control">
+                                <option value="0">user</option>
+                                <option value="1">admin</option>
+                                <option value="2">moderator</option>
+                                <option value="3">owner</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-outline-warning btn-lg" type="submit">Update User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- /.container-fluid -->
+    <!-- /.content-wrapper-->
+    <%- include('../admin-footer') -%>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+<%- include('../admin-header') -%>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <!-- Navigation -->
+    <%- include('../admin-topNav') -%>
+    <div class="content-wrapper">
+        <%- include('../messages') -%>
+        <div class="container">
+            <h1>Edit Post #<a href="/post/<%= post._id%>"><%- post.title %></a></h1>
+
+            <div class="row p-4">
+                <div class="col-md-10">
+                    <form action="/admin/posts/edit/<%- post._id %>?newMethod=PUT" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <!-- Preview Image -->
+                            <img class="img-fluid rounded w-100 p-sm-5" src="<%- post.file %>" alt="">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Enter The Title" value=<%- post.title %>>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="file">File Upload</label>
+                            <input type="file" class="form-control" name="uploadedFile" id="uploadedFile">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <div class="category-list">
+                                <ul>
+                                    <% post.category.forEach(function(post_cat, index1) { %>
+                                        <% categories.forEach(function(category, index2) { %>
+                                            <% if(post_cat === category.title) { %>
+                                                <li>
+                                                    <span><%- post_cat %></span>
+                                                    <input type="checkbox" name="category" id="category" checked value="<%- post_cat %>"/>
+                                                </li>
+                                            <% } %>
+                                        <% }); %>
+                                    <% }); %>
+                                    <% let same_cats = categories.filter(category_item => post.category.every(post_category => !post_category.includes(category_item.title))); %>
+                                    <% same_cats.forEach(function (cats_list, index3) { %>
+                                        <li>
+                                            <span><%- cats_list.title %></span>
+                                            <input type="checkbox" name="category" id="category" value="<%- cats_list.title %>"/>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="form-check ml-3">
+                            <label for="allowComments">
+                                <input type="checkbox" class="form-check-input" id="allowComments" name="allowComments" <% if(post.allowComments) { %>checked <% } %>>
+                                Allow Comments
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Content</label>
+                            <textarea name="description" id="description" class="form-control" placeholder="Enter your content here" rows="10"><%- post.description %></textarea>
+                        </div>
+                        <a href="#description_more" id="more-content" class="btn btn-default readMore-text">Toggle More</a>
+                        <div class="form-group">
+                            <label for="description_more"></label>
+                            <textarea name="description_more" id="description_more" class="form-control <% if(post.description_more !== undefined) { %>visible display-block<% } else { %>invisible display-none<% } %>" placeholder="Enter your more content here" rows="15"><%- post.description_more %></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="postType">
+                                <select id="post-type">
+                                    <option value="no media">--Select post type--</option>
+                                    <option value="galleryBox">Gallery</option>
+                                    <option value="downloadBox">Collapsible</option>
+                                    <option value="linkBox">Link</option>
+                                    <option value="infoBox">Info</option>
+                                </select>
+                                <button class="btn btn-outline-success btn-lg" name='add-box-btn' id='add-box-btn' type="button">Add</button>
+                                <button class="btn btn-outline-danger btn-lg" name='remove-box-btn' id='remove-box-btn' type="button">Remove</button>
+                            </label>
+                            <div class="box-setup">
+                                <input type="hidden" id="useDownloadBox" name="useDownloadBox" value="<%- post.useDownloadBox %>">
+                                <input type="hidden" id="useGalleryBox" name="useGalleryBox" value="<%- post.useGalleryBox %>">
+                                <input type="hidden" id="useLinkBox" name="useLinkBox" value="<%- post.useLinkBox %>">
+                                <input type="hidden" id="useInfoBox" name="useInfoBox" value="<%- post.useInfoBox %>">
+                                <div class="info-section">
+                                    <h3 class="text-center">Info Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="info_box_description" name="info_box_description" value="<%= post.InfoBoxContent %>">
+                                    <input type="hidden" id="info_elements_data" name="info_elements_data" value="">
+                                    <%
+                                    let InfoElementsData = "";
+                                    if(post.InfoBoxContent) {
+                                        if (post.InfoBoxContent.length) {
+                                            InfoElementsData = JSON.parse(post.InfoBoxContent);
+                                        }
+                                    }
+                                    if(InfoElementsData.length) { %>
+                                        <div class="info-box-elements">
+                                            <button name="add-info" id="add-info" type="button">Add Info Field</button>
+                                            <% InfoElementsData.forEach(function(infoData, infoIndex) { %>
+                                                <div id="element-info-item" class="element-info-item-<%- infoIndex %>">
+                                                    <label for="info_icon-<%- infoIndex %>"></label>
+                                                    <select class="form-control info_icon" name="info_icon" id="info_icon-<%- infoIndex %>" data-info="<%- infoIndex %>">
+                                                        <option value="">select icon</option>
+                                                        <option value="<i class='fa-solid fa-eye'></i>" data-info="<%- infoIndex %>">&#xf06e;</option>
+                                                        <option value="<i class='fa-solid fa-calendar-check'></i>" data-info="<%- infoIndex %>">&#xf274;</option>
+                                                        <option value="<i class='fa-solid fa-clock'></i>" data-info="<%- infoIndex %>">&#xf017;</option>
+                                                        <option value="<i class='fa-solid fa-plus'></i>" data-info="<%- infoIndex %>">&#x2b;</option>
+                                                        <option value="<i class='fa-solid fa-cloud-download-alt'></i>" data-info="<%- infoIndex %>"></option>
+                                                        <option value="<i class='fa-sharp fa-solid fa-tv'></i>" data-info="<%- infoIndex %>"></option>
+                                                        <option value="<i class='fa-solid fa-file-arrow-down'></i>" data-info="<%- infoIndex %>"></option>
+                                                    </select>
+                                                    <label for="info_property">
+                                                        <input type="text" class="form-control info_property" name="info_property" data-info="<%- infoIndex %>" id="info_property-<%- infoIndex %>" placeholder="enter info property, example: Release Date" value="<%- infoData.property %>">
+                                                    </label>
+                                                    <label for="info_value">
+                                                        <input type="text" class="form-control info_value" name="info_value" data-info="<%- infoIndex %>" id="info_value-<%- infoIndex %>" placeholder="enter info value, example: 2023" value="<%- infoData.value %>">
+                                                    </label>
+                                                    <button type="button" class="close" id="remove-info" data-info="<%- infoIndex %>" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="gallery-section">
+                                    <h3 class="text-center">Gallery Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="post_id_url" name="post_id_url" value="<%= post._id%>">
+                                    <input type="hidden" id="gallery_box_description" name="gallery_box_description" value="<%= post.GalleryBoxContent %>">
+                                    <input type="hidden" id="gallery_elements_data" name="gallery_elements_data" value="">
+                                    <%
+                                    let GalleryElementsData = "";
+                                    if(post.GalleryBoxContent.length) {
+                                        GalleryElementsData = JSON.parse(post.GalleryBoxContent);
+                                    }
+                                    if(GalleryElementsData.length) { %>
+                                        <div class="gallery-box-elements">
+                                            <div id="gallery_frame">
+                                                <% GalleryElementsData.forEach(function(galleryData, galleryIndex) {%>
+                                                    <img src="/uploads/gallery/<%- post._id.toString() %>/<%- galleryData.image %>" alt="<%- galleryData.image.split('.').slice(0, -1).join('.') %>" style="width: 150px; height:150px; padding: 10px" class="preview_image" id="preview_image-<%- galleryIndex %>">
+                                                <% }); %>
+                                            </div>
+                                            <button name="add-image" id="add-image" type="button">Add new image</button>
+                                            <% GalleryElementsData.forEach(function(galleryData, galleryIndex) {%>
+                                                <div class="element-gallery-item-<%- galleryIndex %>">
+                                                    <label for="gallery_image">
+                                                        <input type="file" class="hidden form-control gallery_image" name="gallery_image" data-gallery="<%- galleryIndex %>" id="gallery_image-<%- galleryIndex %>" accept="image/jpeg, image/png">
+                                                        <div class="gallery_button_upload" id="gallery_button_upload-<%- galleryIndex %>"><label for="gallery_image-<%- galleryIndex %>">image <%- galleryIndex + 1 %>: <span>Change</span></label></div>
+                                                    </label>
+                                                    <button type="button" class="close" id="remove-image" data-gallery="<%- galleryIndex %>" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="link-section">
+                                    <h3 class="text-center">Link Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <input type="hidden" id="link_box_description" name="link_box_description" value="<%= post.LinkBoxContent %>">
+                                    <input type="hidden" id="link_elements_data" name="link_elements_data" value="">
+                                    <%
+                                    let LinkElementsData = "";
+                                    if(post.LinkBoxContent.length) {
+                                        LinkElementsData = JSON.parse(post.LinkBoxContent);
+                                    }
+                                    if(LinkElementsData.length) { %>
+                                        <div class="link-box-elements">
+                                            <div class="link-password">
+                                                <label for="link_password">
+                                                    <input type="text" class="form-control link_password" id="link_password" name="link_password" placeholder="enter link password. example: www.localhost.ir" value="<%- LinkElementsData.password %>">
+                                                </label>
+                                            </div>
+                                            <div class="product-name">
+                                                <label for="link_name">
+                                                    <input type="text" class="form-control link_name" id="link_name" name="link_name" placeholder="enter link name. example: VLC Player" value="<%- LinkElementsData.name %>">
+                                                </label>
+                                            </div>
+                                            <button name="add-link" id="add-link" type="button">Add new link</button>
+                                            <% LinkElementsData.links.forEach(function(linksData, linksIndex) {%>
+                                                <div class="element-link-item-<%- linksIndex %>">
+                                                    <label for="link_title">
+                                                        <input type="text" class="form-control link_title" name="link_title" data-link="<%- linksIndex %>" id="link_title-<%- linksIndex %>" placeholder="enter link title, example: download 32bit version" value="<%- linksData.title %>">
+                                                    </label>
+                                                    <label for="link_address">
+                                                        <input type="text" class="form-control link_address" name="link_address" data-link="<%- linksIndex %>" id="link_address-<%- linksIndex %>" placeholder="enter link address, example: www.localhost/dl/32bit.zip" value="<%- linksData.address %>">
+                                                    </label>
+                                                    <button type="button" class="close" id="remove-link" data-link="<%- linksIndex %>" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="download-section">
+                                    <h3 class="text-center">Collapsible Setup</h3>
+                                    <hr>
+                                    <br/>
+                                    <%
+                                    let DownloadElementsData = "";
+                                    if(post.DownloadBoxContent.length)
+                                        DownloadElementsData = JSON.parse(post.DownloadBoxContent);
+                                    %>
+                                    <% if(DownloadElementsData.length > 0) { %>
+                                            <div class="download-box-elements">
+                                                <button name='add-parent' id='add-parent' type='button'>Add Parent Dropdown</button>
+                                                <% DownloadElementsData.forEach(function(downloadBoxParent, indexParent) { %>
+                                                <div class="element-parent-item-<%- indexParent %>">
+                                                    <label for="parent_title">
+                                                        <input type="text" class="form-control parent_title" name="parent_title" data-parent="<%- indexParent %>" id="parent_title-<%- indexParent %>" placeholder="enter parent title" value="<%- downloadBoxParent.title %>">
+                                                    </label>
+                                                    <button type="button" class="close" id="remove-parent" data-parent="<%- indexParent %>" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    <button name="add-child" id="add-child" data-parent="<%- indexParent %>" value="<%- indexParent %>" type="button">Add Child Dropdown</button>
+                                                    <% downloadBoxParent.childs.forEach(function(downloadBoxChild, indexChild) { %>
+                                                        <div class="element-child-item-<%- indexChild %>">
+                                                            <label for="child_title-<%- indexChild %>">
+                                                                <input type="text" class="form-control child_title" data-parent="<%- indexParent %>" data-child="<%- indexChild %>" name="child_title" id="child_title-<%- indexChild %>" placeholder="enter child title" value="<%- downloadBoxChild.title %>">
+                                                            </label>
+                                                            <button type="button" class="close" id="remove-child" data-parent="<%- indexParent %>" data-child="<%- indexChild %>" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            <button name="add-item-<%- indexChild %>" id="add-item" data-child="<%- indexChild %>" data-parent="<%- indexParent %>" value="<%- indexChild %>" type="button">Add Item To Child Dropdown</button>
+                                                            <% downloadBoxChild.items.forEach(function(downloadBoxItem, indexItem) { %>
+                                                                <div class="element-item-item-<%- indexItem %>">
+                                                                    <label for="item_title-<%- indexItem %>">
+                                                                        <input type="text" class="form-control item_title" data-parent="<%- indexParent %>" data-child="<%- indexChild %>" data-item="<%- indexItem %>" name="item_title" id="item_title-<%- indexItem %>" placeholder="enter item title" value="<%- downloadBoxItem.title %>">
+                                                                    </label>
+                                                                    <label for="item_episode-<%- indexItem %>">
+                                                                        <input type="text" class="form-control item_episode" data-parent="<%- indexParent %>" data-child="<%- indexChild %>" data-item="<%- indexItem %>" name="item_episode" id="item_episode-<%- indexItem %>" placeholder="enter item episode" value="<%- downloadBoxItem.episode %>">
+                                                                    </label>
+                                                                    <label for="item_subtitle-<%- indexItem %>">
+                                                                        <input type="text" class="form-control item_subtitle" data-parent="<%- indexParent %>" data-child="<%- indexChild %>" data-item="<%- indexItem %>" name="item_subtitle" id="item_subtitle-<%- indexItem %>" placeholder="enter item subtitle" value="<%- downloadBoxItem.subtitle %>">
+                                                                    </label>
+                                                                    <button type="button" class="close" id="remove-item" data-parent="<%- indexParent %>" data-child="<%- indexChild %>" data-item="<%- indexItem %>" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+                                                            <% }); %>
+                                                        </div>
+                                                    <% }); %>
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    <% } %>
+                                    <input type="hidden" id="download_box_description" name="download_box_description" value="<%= post.DownloadBoxContent %>">
+                                    <input type="hidden" id="download_elements_data" name="download_elements_data" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-warning btn-lg" type="submit">Update Post</button>
+                    </form>
+                    <br/>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+        <!-- /.content-wrapper-->
+        <%- include('../admin-footer') -%>
+    </div>
+</body>
