@@ -1,6 +1,52 @@
 ## سیستم مدیریت محتوا 
 این پروژه یک سیستم مدیریت محتوا (CMS) مشابه WordPress است که با استفاده از Node.js و MongoDB توسعه داده شده است. این سیستم به کاربران امکان می‌دهد که محتوا را به صورت داینامیک مدیریت کنند و قالب‌های مختلفی برای سایت خود ایجاد و استفاده کنند. همچنین دارای امکاناتی مانند سیستم رتبه‌بندی، تغییر زبان، ارسال و مدیریت پست‌ها و نظرات، و پنل مدیریت قدرتمند می‌باشد.
 
+# تصاویر
+![01](https://github.com/zenyos/CMS/blob/main/screenshots/1.jpg)
+
+
+![02](https://github.com/zenyos/CMS/blob/main/screenshots/2.jpg)
+
+
+![03](https://github.com/zenyos/CMS/blob/main/screenshots/3.jpg)
+
+
+![04](https://github.com/zenyos/CMS/blob/main/screenshots/4.jpg)
+
+
+![05](https://github.com/zenyos/CMS/blob/main/screenshots/5.jpg)
+
+
+![06](https://github.com/zenyos/CMS/blob/main/screenshots/6.jpg)
+
+
+![07](https://github.com/zenyos/CMS/blob/main/screenshots/7.jpg)
+
+
+![08](https://github.com/zenyos/CMS/blob/main/screenshots/8.jpg)
+
+
+![09](https://github.com/zenyos/CMS/blob/main/screenshots/9.jpg)
+
+
+![10](https://github.com/zenyos/CMS/blob/main/screenshots/10.jpg)
+
+
+![11](https://github.com/zenyos/CMS/blob/main/screenshots/11.jpg)
+
+
+![12](https://github.com/zenyos/CMS/blob/main/screenshots/12.jpg)
+
+
+![13](https://github.com/zenyos/CMS/blob/main/screenshots/13.jpg)
+
+
+![14](https://github.com/zenyos/CMS/blob/main/screenshots/14.jpg)
+
+
+![15](https://github.com/zenyos/CMS/blob/main/screenshots/15.jpg)
+
+
 # ویژگی‌ها
 پنل مدیریت کاربرپسند: امکان مدیریت تمامی بخش‌های سایت از طریق پنل مدیریت.
 قالب‌های داینامیک: کاربران می‌توانند قالب‌های سایت را ایجاد، ویرایش و استفاده کنند.
